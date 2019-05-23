@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/etc/X11/xorg.conf.d'
+let g:netrw_dirhist_2='/root/.config/gtk-3.0'
+let g:netrw_dirhist_3='/etc/X11/xinit'
+let g:netrw_dirhist_4='/etc/X11/xorg.conf.d'
+let g:netrw_dirhist_5='/etc/X11/xinit'
+let g:netrw_dirhist_6='/etc/X11/xinit/xinitrc.d'
+let g:netrw_dirhist_7='/etc/X11/xinit'

@@ -1,0 +1,54 @@
+snippet cnl
+console.log '$1', $0
+endsnippet
+
+snippet class
+import React, { Component } from 'react'
+import L from 'react-dom-factories'
+L_ = React.createElement
+
+export default class $1 extends React.Component
+  constructor:($2)->
+    super($2)
+    $0
+	render: ->
+
+endsnippet
+
+snippet rcls
+React = require 'react'
+ReactDOM = require 'react-dom'
+import DOM from 'react-dom-factories'
+
+{Component}= React
+L_ = React.createElement
+L = DOM
+log = console.log
+
+class ${1:classname} extends Component
+	constructor: (props)->
+		super(props)
+		$0
+
+	@getDerivedStateFromProps: (props,state)->
+		Object.assign state, 
+
+	render: ->
+		L.div
+
+export default $1
+
+# Created by Danil Lykov on ${2:`date +%d.%m.%Y`}
+endsnippet
+
+snippet cla "Class" b
+class ${1:ClassName}`!p snip.rv = " extends " if t[2] else ""`${2:Ancestor}
+
+${3:constructor:`!p snip.rv = " (" if t[4] else ""`${4:args}`!p snip.rv = ")" if t[4] else ""` ->
+	${5:# body...}}
+	$0
+endsnippet
+
+snippet ass 
+Object.assign $1,$2
+endsnippet
