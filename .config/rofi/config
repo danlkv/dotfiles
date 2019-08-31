@@ -1,9 +1,10 @@
-rofi.combi-modi:    window,drun,ssh
+rofi.combi-modi:    window,drun,ssh,clipboard:greenclip print
 
 !rofi.theme:         solarized
 !rofi.font:          hack 10
 
-rofi.modi:          combi,drun
+rofi.modi:          combi,drun,clipboard:greenclip print
+
 rofi.lines: 5
 rofi.eh: 2
 rofi.padding: 200
