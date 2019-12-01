@@ -8,7 +8,6 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.fzf
 set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 set rtp+=~/.vim/bundle/Vundle.vim
 
@@ -22,11 +21,15 @@ Plugin 'VundleVim/Vundle.vim'
 " BASIC
 Plugin 'scrooloose/nerdtree'		"Dir explorer
 Plugin 'easymotion/vim-easymotion'  "Fly on the vim
-Plugin 'anschnapp/move-less'        " Move less folding
+"Plugin 'anschnapp/move-less'        " Move less folding
 Plugin 'tpope/vim-fugitive'			"Git plugin
 Plugin 'scrooloose/syntastic'
 Plugin 'SirVer/ultisnips'			" Code snippets
 Plugin 'kshenoy/vim-signature'
+Plugin 'zxqfl/tabnine-vim'          "autocompletion
+
+Plugin 'nvie/vim-flake8'            "Python linting
+Plugin 'soywod/kronos.vim'
 
 "" Needs compilation or additional soft
 Plugin 'junegunn/fzf.vim'			"fuzzy search
@@ -42,13 +45,16 @@ Plugin 'rust-lang/rust.vim'
 
 " Python
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'williamjameshandley/vimteractive'
+Plugin 'jupyter-vim/jupyter-vim'
+
 
 " WEB
-Plugin 'KabbAmine/vCoolor.vim'
+"Plugin 'KabbAmine/vCoolor.vim'      "color selector
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'mattn/emmet-vim'
+"Plugin 'mattn/emmet-vim'
 
 " BELLS
 "Bundle 'pydave/AsyncCommand'
@@ -59,6 +65,8 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'tomasiser/vim-code-dark'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'nightsense/cosmic_latte'
+Plugin 'chriskempson/base16-vim'
+
 " Plugin 'vim-scripts/colorsupport.vim'
 
 " All of your Plugins must be added before the following line
@@ -70,12 +78,18 @@ set cursorcolumn
 hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE 
 
 " Python settings
+"autocmd BufWritePost *.py call flake8#Flake8()
+
+nnoremap Q :
+
 set tabstop=4
 set shiftwidth=4
 set smarttab
 set expandtab 
 set softtabstop=4 
 set autoindent
+
+let g:syntastic_python_checkers = ['pyflakes']
 
 let python_highlight_all = 1
 autocmd FileType coffee setlocal ts=2 sts=2 sw=2
@@ -85,6 +99,7 @@ let g:solarized_termcolors=256
 let g:heman_termcolors=256
 colorscheme default
 colorscheme cosmic_latte
+colorscheme base16-greenscreen
 set background=dark
 
 set guifont=Ubuntu\ Mono\ 14
@@ -99,70 +114,75 @@ set guioptions-=L  "remove left-hand scroll bar
 set noswapfile
 
 " Line numbers
-set nu
-set relativenumber
+" set nu
+" set relativenumber
+
 " Highlight every occurence of searched thing
 set hlsearch
 "hi EasyMotionTarget ctermbg=none ctermfg=green
 "hi EasyMotionShade ctermbg=none ctermfg=blue
 
-" Use urxvt instead
-let g:fzf_launcher = 'urxvt -geometry 120x30 -e sh -c %s'
-" In Neovim, you can set up fzf window using a Vim command
+let g:fzf_action = {
+  \ 'ctrl-r': 'up',
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
 " Default fzf layout
 " - down / up / left / right
-let g:fzf_layout = { 'down': '~40%' }
+let g:fzf_layout = { 'down': '~30%' }
 if executable('fzf')
-  " FZF {{{
-  " <C-p> or <C-t> to search files
-  nnoremap <silent> <C-t> :FZF -m<cr>
-  nnoremap <silent> <C-p> :FZF -m<cr>
+    " FZF {{{
+    " <C-p> or <C-t> to search files
+    nnoremap <silent> <C-t> :FZF -m<cr>
 
-  " <M-p> for open buffers
-  nnoremap <silent> <M-p> :Buffers<cr>
-  " for Lines
-  nnoremap <silent> <c-f> :Lines<cr>
-  " <M-S-p> for MRU
-  nnoremap <silent> <M-S-p> :History<cr>
+    " <M-p> for open buffers
+    "nnoremap <silent> <c-l> :GFiles<cr>
+    command! GitFiles call fzf#run(fzf#wrap({'source':'git ls-files', 'options':'--bind ctrl-s:up,ctrl-h:down'}))
+    nnoremap <silent> <c-l> :GitFiles<cr>
 
-  " Use fuzzy completion relative filepaths across directory
-  imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+    " <M-p> for open buffers
+    nnoremap <silent> <c-g> :Buffers<cr>
+    " for Lines
+    nnoremap <silent> <c-f> :Lines<cr>
 
-  " Better command history with q:
-  command! CmdHist call fzf#vim#command_history({'top': '40'})
-  nnoremap q: :CmdHist<CR>
+    " Use fuzzy completion relative filepaths across directory
+    imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 
-  " Better search history
-  command! QHist call fzf#vim#search_history({'top': '40'})
-  nnoremap q/ :QHist<CR>
+    " Better command history with q:
+    command! CmdHist call fzf#vim#command_history({'top': '40'})
+    nnoremap q: :CmdHist<CR>
 
-  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
-  " }}}
+    " Better search history
+    command! QHist call fzf#vim#search_history({'top': '40'})
+    nnoremap q/ :QHist<CR>
+
+    command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
+    " }}}
 else
-  " CtrlP fallback
+    " CtrlP fallback
 end
 
 " In Neovim, you can set up fzf window using a Vim command
-let g:fzf_layout = { 'window': 'enew' }
-let g:fzf_layout = { 'window': '-tabnew' }
-let g:fzf_layout = { 'window': '10split' }
+" let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+"let g:fzf_layout = { 'window': '10split' }
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+            \ { 'fg':      ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Comment'],
+            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'PreProc'],
+            \ 'border':  ['fg', 'Ignore'],
+            \ 'prompt':  ['fg', 'Conditional'],
+            \ 'pointer': ['fg', 'Exception'],
+            \ 'marker':  ['fg', 'Keyword'],
+            \ 'spinner': ['fg', 'Label'],
+            \ 'header':  ['fg', 'Comment'] }
 
 " Enable per-command history.
 " CTRL-N and CTRL-P will be automatically bound to next-history and
@@ -191,6 +211,8 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:ycm_server_python_interpreter = '/usr/bin/python2'
 
 let g:ycm_autoclose_preview_window_after_insertion = 1
+
+let maplocalleader = "\<space>"
 " <Leader>f{char} to move to {char}
 map  <Leader>f <Plug>(easymotion-bd-f)
 nmap <Leader>f <Plug>(easymotion-overwin-f)
@@ -244,8 +266,9 @@ nnoremap <space>gw :Gwrite<CR><CR>
 set pastetoggle=<A-p>
 
 " Do paste in the usual way
-imap <c-v> <c-[>:set paste<cr>"+p:set nopaste<cr>i
+imap <c-v> <c-[>:set paste<cr>"+p:set nopaste<cuuuuu
 
+nnoremap <C-q> :q<CR>
 "split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>

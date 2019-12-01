@@ -1,0 +1,6 @@
+.vim/
+.config/
+.*rc
+
+
+.tmux.conf

@@ -32,12 +32,11 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-mount /dev/sda3 /windows
+#mount /dev/sda3 /windows
 
 feh --bg-fill /home/dali/Pictures/Wallpapers/wlp_lit_hd.png
 #feh --bg-fill /home/dali/Pictures/Wallpapers/violet.jpg
 tilda &
-st &
 compton &
 xbindkeys &
 tint2 &

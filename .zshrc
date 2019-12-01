@@ -33,7 +33,7 @@ alias gs=gst
 
 source $ZSH/oh-my-zsh.sh
 
-alias setproj="echo $(pwd) >> /home/dali/.current_project"
+alias setproj="echo \$(pwd) > /home/dali/.current_project"
 
 cd $(cat /home/dali/.current_project)
 
