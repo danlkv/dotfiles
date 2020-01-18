@@ -1,76 +1,71 @@
-" This is personal .vimrc of Danil Lykov http://lykov.tech
-" Hope I will not become dependent on all these 
-" plugins and be able to use raw vim :)
-"
-source ~/.vim/py.vim
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
 set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
-set rtp+=~/.vim/bundle/Vundle.vim
 
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
+
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plug 'VundleVim/Vundle.vim'
 
 " BASIC
-Plugin 'scrooloose/nerdtree'		"Dir explorer
-Plugin 'easymotion/vim-easymotion'  "Fly on the vim
-"Plugin 'anschnapp/move-less'        " Move less folding
-Plugin 'tpope/vim-fugitive'			"Git plugin
-Plugin 'scrooloose/syntastic'
-Plugin 'SirVer/ultisnips'			" Code snippets
-Plugin 'kshenoy/vim-signature'
-Plugin 'zxqfl/tabnine-vim'          "autocompletion
+Plug 'scrooloose/nerdtree'		"Dir explorer
+Plug 'easymotion/vim-easymotion'  "Fly on the vim
+"Plug 'anschnapp/move-less'        " Move less folding
+Plug 'tpope/vim-fugitive'			"Git plugin
+Plug 'scrooloose/syntastic'
+Plug 'SirVer/ultisnips'			" Code snippets
+Plug 'kshenoy/vim-signature'
+Plug 'zxqfl/tabnine-vim'          "autocompletion
 
-Plugin 'nvie/vim-flake8'            "Python linting
-Plugin 'soywod/kronos.vim'
+Plug 'nvie/vim-flake8'            "Python linting
+Plug 'soywod/kronos.vim'
 
 "" Needs compilation or additional soft
-Plugin 'junegunn/fzf.vim'			"fuzzy search
-"Plugin 'wincent/Command-T'
-" Plugin 'valloric/youcompleteme'
-Plugin 'christoomey/vim-tmux-navigator'
+Plug 'junegunn/fzf.vim'			"fuzzy search
+"Plug 'wincent/Command-T'
+" Plug 'valloric/youcompleteme'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Elm
-Plugin 'ElmCast/elm-vim'
+Plug 'ElmCast/elm-vim'
 
 " Rust
-Plugin 'rust-lang/rust.vim' 
+Plug 'rust-lang/rust.vim' 
 
 " Python
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'williamjameshandley/vimteractive'
-Plugin 'jupyter-vim/jupyter-vim'
+Plug 'vim-scripts/indentpython.vim'
+Plug 'williamjameshandley/vimteractive'
+Plug 'jupyter-vim/jupyter-vim'
 
 
 " WEB
-"Plugin 'KabbAmine/vCoolor.vim'      "color selector
-Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
-Plugin 'kchmck/vim-coffee-script'
-"Plugin 'mattn/emmet-vim'
+"Plug 'KabbAmine/vCoolor.vim'      "color selector
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'kchmck/vim-coffee-script'
+"Plug 'mattn/emmet-vim'
 
 " BELLS
 "Bundle 'pydave/AsyncCommand'
 "Bundle 'mnick/vim-pomodoro'
-Plugin 'itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
 
 " Theme
-Plugin 'tomasiser/vim-code-dark'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'nightsense/cosmic_latte'
-Plugin 'chriskempson/base16-vim'
+Plug 'tomasiser/vim-code-dark'
+Plug 'altercation/vim-colors-solarized'
+Plug 'nightsense/cosmic_latte'
+Plug 'chriskempson/base16-vim'
 
-" Plugin 'vim-scripts/colorsupport.vim'
+" Plug 'vim-scripts/colorsupport.vim'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
+" All of your Plugs must be added before the following line
+call plug#end()
+
 filetype plugin indent on    " required
 
 set cursorline
