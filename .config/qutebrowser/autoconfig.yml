@@ -8,11 +8,19 @@ config_version: 2
 settings:
   bindings.commands:
     global:
+      insert:
+        <Ctrl+m>: fake-key <return>
       normal:
         ',j': :run-with-count 5 scroll down
+        ',m': spawn mpv {url}
+        <Ctrl+Shift+h>: :open qute://history
         <Ctrl+f>: :hint all tab-bg --rapid
+        <Ctrl+h>: :open qute://history
+        <Ctrl+m>: fake-key
+        <Ctrl+o>: download-open
         ft: '`:hint all tab-bg --rapid`'
         jj: 4j
+        sR: :spawn --userscript speed_reader
         tL: open https://outline.com/{url}
         tR: :spawn --userscript readability
         u: hint
@@ -48,6 +56,8 @@ settings:
     - q*
   keyhint.delay:
     global: 0
+  tabs.position:
+    global: top
   url.searchengines:
     global:
       DEFAULT: https://google.com/search?q={}
