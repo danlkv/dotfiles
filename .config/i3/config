@@ -4,9 +4,9 @@ set $mod Mod1
 # Files shortcuts
 set $TERM st
 set $EDITOR nvim
-bindsym $mod+apostrophe exec "st -e $EDITOR ~/f-files/1"
-bindsym $mod+comma exec "st -e $EDITOR ~/f-files/2"
-bindsym $mod+period exec "st -e $EDITOR ~/f-files/3"
+bindsym $mod+apostrophe exec "st -e $EDITOR `realpath ~/f-files/1`"
+bindsym $mod+comma exec "st -e $EDITOR `realpath ~/f-files/2`"
+bindsym $mod+period exec "st -e $EDITOR `realpath ~/f-files/3`"
 
 # for_window [title="f-files"] floating enable
 
