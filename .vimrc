@@ -6,42 +6,40 @@ set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 
 call plug#begin('~/.vim/plugged')
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plug 'VundleVim/Vundle.vim'
-
 " BASIC
-Plug 'scrooloose/nerdtree'		"Dir explorer
+"Plug 'scrooloose/nerdtree'		"Dir explorer
+Plug 'preservim/nerdtree'
 Plug 'easymotion/vim-easymotion'  "Fly on the vim
 "Plug 'anschnapp/move-less'        " Move less folding
 Plug 'tpope/vim-fugitive'			"Git plugin
-Plug 'scrooloose/syntastic'
-Plug 'SirVer/ultisnips'			" Code snippets
-Plug 'kshenoy/vim-signature'
+Plug 'vim-syntastic/syntastic'
+"Plug 'SirVer/ultisnips'			" Code snippets
+"Plug 'kshenoy/vim-signature'    " visual marks
 Plug 'zxqfl/tabnine-vim'          "autocompletion
 
 Plug 'nvie/vim-flake8'            "Python linting
-Plug 'soywod/kronos.vim'
+" Plug 'soywod/kronos.vim'          " time manager
 
 "" Needs compilation or additional soft
 Plug 'junegunn/fzf.vim'			"fuzzy search
 "Plug 'wincent/Command-T'
 " Plug 'valloric/youcompleteme'
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
 
 " Elm
-Plug 'ElmCast/elm-vim'
+" Plug 'ElmCast/elm-vim'
 
 " Rust
 Plug 'rust-lang/rust.vim' 
 
+
 " Python
 Plug 'vim-scripts/indentpython.vim'
-Plug 'williamjameshandley/vimteractive'
-Plug 'jupyter-vim/jupyter-vim'
-
+"Plug 'williamjameshandley/vimteractive'
+"Plug 'jupyter-vim/jupyter-vim'
+Plug 'janko/vim-test'
+"Plug 'jaxbot/semantic-highlight.vim'
+Plug 'numirias/semshi'
 
 " WEB
 "Plug 'KabbAmine/vCoolor.vim'      "color selector
@@ -49,11 +47,11 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'kchmck/vim-coffee-script'
 "Plug 'mattn/emmet-vim'
+Plug 'posva/vim-vue'
+
 
 " BELLS
-"Bundle 'pydave/AsyncCommand'
-"Bundle 'mnick/vim-pomodoro'
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
 
 " Theme
 Plug 'tomasiser/vim-code-dark'
@@ -74,8 +72,10 @@ hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=
 
 " Python settings
 "autocmd BufWritePost *.py call flake8#Flake8()
+"autocmd BufEnter * :SemanticHighlight
 
 nnoremap Q :
+inoremap <c-b> <c-[>
 
 set tabstop=4
 set shiftwidth=4
@@ -92,9 +92,12 @@ autocmd FileType coffee setlocal ts=2 sts=2 sw=2
 syntax enable
 let g:solarized_termcolors=256
 let g:heman_termcolors=256
+set termguicolors
 colorscheme default
 colorscheme cosmic_latte
-colorscheme base16-greenscreen
+colorscheme darkblue
+colorscheme base16-black-metal-immortal
+"colorscheme base16-atelier-estuary
 set background=dark
 
 set guifont=Ubuntu\ Mono\ 14
@@ -103,6 +106,7 @@ set guifont=Hack\ Regular\ 11
 let g:autoclose_on=0
 
 set guioptions-=T  "remove toolbar
+set guioptions-=m  "remove menu bar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
 
@@ -194,7 +198,8 @@ set pumheight=8
 set foldmethod=indent
 set foldlevel=2
 
-nmap ;w :w<CR>
+" Save on ctrl-S
+nmap <c-s> :w<CR>
 
 " Snippets configuration. not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
