@@ -8,6 +8,9 @@ bindsym $mod+apostrophe exec "st -e $EDITOR `realpath ~/f-files/1`"
 bindsym $mod+comma exec "st -e $EDITOR `realpath ~/f-files/2`"
 bindsym $mod+period exec "st -e $EDITOR `realpath ~/f-files/3`"
 
+bindsym $mod+q exec "kill -s USR1 $(pidof deadd-notification-center)"
+
+
 # for_window [title="f-files"] floating enable
 
 # Font for window titles. Will also be used by the bar unless a different font
