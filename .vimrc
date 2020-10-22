@@ -250,6 +250,7 @@ nmap <C-g>c :Gcommit<CR>
 let g:Gstatus="<c-g>s"
 
 map <C-n> :NERDTreeToggle<CR>
+map <C-b> :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
 
 map K i<CR><Esc>
