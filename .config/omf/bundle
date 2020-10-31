@@ -1,8 +1,17 @@
 package fzf
 package https://github.com/jhillyerd/plugin-git
 theme agnoster
+theme aight
+theme bira
+theme clearance
+theme cor
+theme dangerous
 theme default
+theme eden
+theme es
+theme fishbone
 theme flash
 theme idan
 theme lolfish
 theme nai
+theme wolf-theme

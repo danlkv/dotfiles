@@ -34,10 +34,10 @@ fi
 
 #mount /dev/sda3 /windows
 
-feh --bg-fill /home/dali/Pictures/Wallpapers/wlp_lit_hd.png
+feh --bg-fill /home/dali/Pictures/Wallpapers/current
 #feh --bg-fill /home/dali/Pictures/Wallpapers/violet.jpg
 tilda &
-compton &
+picom &
 xbindkeys &
 tint2 &
 

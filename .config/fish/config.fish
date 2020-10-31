@@ -2,4 +2,7 @@ abbr -a gl "git log --decorate --color --graph --all  --pretty=format:'%C(yellow
 
 alias vim=nvim
 alias clip="xclip -selection 'clipboard'"
+bind -s --preset -M default \cs end-of-line
+bind \cs end-of-line
+bind -s --preset -M insert \cs end-of-line 
 
