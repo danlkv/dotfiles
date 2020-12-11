@@ -202,6 +202,11 @@ set pumheight=8
 set foldmethod=indent
 set foldlevel=2
 
+let g:test#python#runner = 'pytest'
+let g:test#strategy = 'neovim'
+map <c-m>t :TestNearest<CR>
+map <c-m>T :TestSuit<CR>
+map <c-m>f :call flake8#Flake8()<c-r>
 " Save on ctrl-S
 nmap <c-s> :w<CR>
 
