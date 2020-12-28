@@ -1,0 +1,11 @@
+{
+  "NotebookApp": {
+    "password": "sha1:251d42cabdbd:060b4cb04cc26948e6187859f9c0e6def8eea57a",
+    "allow_origin": "*",
+    "ip": "0.0.0.0"
+
+  },
+  "TerminalInteractiveShell":{
+      "confirm_exit": false
+  }
+}

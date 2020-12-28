@@ -1,0 +1,10 @@
+{
+    "Diff": {
+        "Ignore": {
+            "/cells/*/outputs": true,
+            "/cells/*/attachments": false,
+            "/cells/*/metadata": true,
+            "/cells/*": ["execution_count"]
+        }
+    }
+}
