@@ -75,6 +75,7 @@ hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=
 "autocmd BufEnter * :SemanticHighlight
 
 nnoremap Q :
+inoremap <c-[> <c-\><C-n>
 inoremap <c-b> <c-[>
 
 set tabstop=4
@@ -94,9 +95,9 @@ let g:solarized_termcolors=256
 let g:heman_termcolors=256
 set termguicolors
 colorscheme default
-colorscheme cosmic_latte
-colorscheme darkblue
-colorscheme base16-black-metal-immortal
+"colorscheme cosmic_latte
+"colorscheme darkblue
+"colorscheme base16-black-metal-immortal
 "colorscheme base16-atelier-estuary
 set background=dark
 
