@@ -1,5 +1,7 @@
 {
   "load_extensions": {
+    "toc2/main": true,
+    "select_keymap/main": false,
     "vim_binding/vim_binding": true
   }
 }
