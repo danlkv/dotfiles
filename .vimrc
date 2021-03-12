@@ -14,16 +14,20 @@ Plug 'easymotion/vim-easymotion'  "Fly on the vim
 Plug 'tpope/vim-fugitive'			"Git plugin
 Plug 'vim-syntastic/syntastic'
 "Plug 'SirVer/ultisnips'			" Code snippets
-"Plug 'kshenoy/vim-signature'    " visual marks
+Plug 'kshenoy/vim-signature'    " visual marks
 "Plug 'zxqfl/tabnine-vim'          "autocompletion
 Plug 'neoclide/coc.nvim', {'branch':'release'}          "autocompletion
 
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'nvie/vim-flake8'            "Python linting
 Plug 'vim-test/vim-test'
-" Plug 'soywod/kronos.vim'          " time manager
 
 "" Needs compilation or additional soft
-Plug 'junegunn/fzf.vim'			"fuzzy search
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Plug 'soywod/kronos.vim'          " time manager
+
 
 "Plug 'wincent/Command-T'
 " Plug 'valloric/youcompleteme'
@@ -41,7 +45,7 @@ Plug 'vim-scripts/indentpython.vim'
 "Plug 'williamjameshandley/vimteractive'
 "Plug 'jupyter-vim/jupyter-vim'
 "Plug 'jaxbot/semantic-highlight.vim'
-Plug 'numirias/semshi'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " WEB
 "Plug 'KabbAmine/vCoolor.vim'      "color selector
@@ -78,11 +82,7 @@ hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=
 "autocmd BufEnter * :SemanticHighlight
 
 nnoremap Q :
-<<<<<<< HEAD
-inoremap <c-[> <c-\><C-n>
-=======
 tnoremap <c-[> <C-\><C-n>
->>>>>>> 50844a4022a52f65882db0eb992e8d92789e70fc
 inoremap <c-b> <c-[>
 
 set tabstop=4
@@ -150,7 +150,6 @@ let g:fzf_action = {
 " Default fzf layout
 " - down / up / left / right
 let g:fzf_layout = { 'down': '~30%' }
-if executable('fzf')
     " FZF {{{
     " <C-p> or <C-t> to search files
     nnoremap <silent> <C-t> :FZF -m<cr>
@@ -178,9 +177,6 @@ if executable('fzf')
 
     command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
     " }}}
-else
-    " CtrlP fallback
-end
 
 " In Neovim, you can set up fzf window using a Vim command
 " let g:fzf_layout = { 'window': 'enew' }
