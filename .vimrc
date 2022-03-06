@@ -257,9 +257,9 @@ nmap s <Plug>(easymotion-overwin-f2)
 " Without these mappings, `n` & `N` works fine. (These mappings just provide
 " different highlight method and have some other features )
 
-nmap <C-g>s :Gstatus<CR>
+nmap <C-g>s :Git status<CR>
 nmap <C-g>w :Gwrite<CR>
-nmap <C-g>c :Gcommit<CR>
+nmap <C-g>c :Git commit<CR>
 
 "nmap <c-t> :CommandT<cr>
 let g:Gstatus="<c-g>s"
@@ -274,10 +274,10 @@ imap jj <Esc>
 imap <C-d> <Esc>
 " fugitive git bindings
 nnoremap <space>ga :Git add %:p<CR><CR>
-nnoremap <space>gs :Gstatus<CR>
-nnoremap <space>gc :Gcommit -v -q<CR>
-nnoremap <space>gt :Gcommit -v -q %:p<CR>
-nnoremap <space>gp :Gpush<CR>
+nnoremap <space>gs :Git status<CR>
+nnoremap <space>gc :Git commit -v -q<CR>
+nnoremap <space>gt :Git commit -v -q %:p<CR>
+nnoremap <space>gp :Git push<CR>
 nnoremap <space>gd :Gdiff<CR>
 nnoremap <space>ge :Gedit<CR>
 nnoremap <space>gr :Gread<CR>
