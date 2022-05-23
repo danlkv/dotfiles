@@ -45,7 +45,7 @@ Plug 'vim-scripts/indentpython.vim'
 "Plug 'williamjameshandley/vimteractive'
 "Plug 'jupyter-vim/jupyter-vim'
 "Plug 'jaxbot/semantic-highlight.vim'
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+"Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " WEB
 "Plug 'KabbAmine/vCoolor.vim'      "color selector
@@ -120,8 +120,8 @@ colorscheme default
 colorscheme base16-brewer
 set background=dark
 
-set guifont=Ubuntu\ Mono\ 14
-set guifont=CMU\ Typewriter\ Text\ \Roman\ 15
+"set guifont=Ubuntu\ Mono\ 14
+"set guifont=CMU\ Typewriter\ Text\ \Roman\ 15
 set guifont=Hack\ Regular\ 11
 let g:autoclose_on=0
 

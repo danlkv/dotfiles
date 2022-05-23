@@ -4,6 +4,7 @@
             "/cells/*/outputs": true,
             "/cells/*/attachments": false,
             "/cells/*/metadata": true,
+            "/cells/*/id": true,
             "/cells/*": ["execution_count"]
         }
     }
