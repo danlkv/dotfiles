@@ -7,3 +7,5 @@ bind -s --preset -M default \cs end-of-line
 bind \cs end-of-line
 bind -s --preset -M insert \cs end-of-line 
 
+source $HOME/.config/danlkv_platforms/$(hostname)
+
