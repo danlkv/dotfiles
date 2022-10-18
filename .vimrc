@@ -275,7 +275,7 @@ imap <C-d> <Esc>
 " fugitive git bindings
 nnoremap <space>ga :Git add %:p<CR><CR>
 nnoremap <space>gs :Git status<CR>
-nnoremap <space>gc :Git commit -v -q<CR>
+nnvimnoremap <space>gc :Git commit -v -q<CR>
 nnoremap <space>gt :Git commit -v -q %:p<CR>
 nnoremap <space>gp :Git push<CR>
 nnoremap <space>gd :Gdiff<CR>
