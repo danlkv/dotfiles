@@ -50,10 +50,10 @@ Plug 'vim-scripts/indentpython.vim'
 " WEB
 "Plug 'KabbAmine/vCoolor.vim'      "color selector
 Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'kchmck/vim-coffee-script'
+"Plug 'maxmellon/vim-jsx-pretty'
+"Plug 'kchmck/vim-coffee-script'
 "Plug 'mattn/emmet-vim'
-Plug 'posva/vim-vue'
+"Plug 'posva/vim-vue'
 
 
 " BELLS
@@ -63,7 +63,7 @@ Plug 'posva/vim-vue'
 Plug 'tomasiser/vim-code-dark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'nightsense/cosmic_latte'
-Plug 'Sammyalhashe/random_colorscheme.vim'
+"Plug 'Sammyalhashe/random_colorscheme.vim'
 Plug 'chriskempson/base16-vim'
 
 " Plug 'vim-scripts/colorsupport.vim'
@@ -117,7 +117,7 @@ colorscheme default
 "colorscheme base16-atelier-estuary
 "colorscheme base16-bespin
 "colorscheme base16-harmonic-dark
-colorscheme base16-brewer
+"colorscheme base16-brewer
 set background=dark
 
 "set guifont=Ubuntu\ Mono\ 14
@@ -275,7 +275,6 @@ imap <C-d> <Esc>
 " fugitive git bindings
 nnoremap <space>ga :Git add %:p<CR><CR>
 nnoremap <space>gs :Git status<CR>
-nnvimnoremap <space>gc :Git commit -v -q<CR>
 nnoremap <space>gt :Git commit -v -q %:p<CR>
 nnoremap <space>gp :Git push<CR>
 nnoremap <space>gd :Gdiff<CR>
