@@ -12,7 +12,7 @@ Plug 'preservim/nerdtree'
 Plug 'easymotion/vim-easymotion'  "Fly on the vim
 "Plug 'anschnapp/move-less'        " Move less folding
 Plug 'tpope/vim-fugitive'			"Git plugin
-Plug 'vim-syntastic/syntastic'
+Plug 'vim-python/python-syntax'	"Python syntax
 "Plug 'SirVer/ultisnips'			" Code snippets
 Plug 'kshenoy/vim-signature'    " visual marks
 "Plug 'zxqfl/tabnine-vim'          "autocompletion
@@ -64,7 +64,7 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'nightsense/cosmic_latte'
 "Plug 'Sammyalhashe/random_colorscheme.vim'
-Plug 'chriskempson/base16-vim'
+"Plug 'chriskempson/base16-vim'
 
 " Plug 'vim-scripts/colorsupport.vim'
 
@@ -92,8 +92,6 @@ set expandtab
 set softtabstop=4 
 set autoindent
 
-let g:syntastic_python_checkers = ['pyflakes']
-let g:syntastic_yaml_checkers = ['yamllint']
 let g:available_colorschemes= ['nord', 'dracula', 'base16-atelier-lakeside']
 
 " coc
