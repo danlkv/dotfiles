@@ -7,8 +7,9 @@ set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 call plug#begin('~/.vim/plugged')
 
 " BASIC
-"Plug 'scrooloose/nerdtree'		"Dir explorer
-Plug 'preservim/nerdtree'
+Plug 'lambdalisue/fern.vim', {'branch':'main'}
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.1'}
 Plug 'easymotion/vim-easymotion'  "Fly on the vim
 "Plug 'anschnapp/move-less'        " Move less folding
 Plug 'tpope/vim-fugitive'			"Git plugin
@@ -28,7 +29,6 @@ Plug 'junegunn/fzf.vim'
 
 " Plug 'soywod/kronos.vim'          " time manager
 
-
 "Plug 'wincent/Command-T'
 " Plug 'valloric/youcompleteme'
 " Plug 'christoomey/vim-tmux-navigator'
@@ -38,6 +38,9 @@ Plug 'junegunn/fzf.vim'
 
 " Rust
 Plug 'rust-lang/rust.vim' 
+
+" Julia
+"Plug 'JuliaEditorSupport/julia-vim'
 
 
 " Python
@@ -69,12 +72,16 @@ Plug 'nightsense/cosmic_latte'
 " Plug 'vim-scripts/colorsupport.vim'
 
 " All of your Plugs must be added before the following line
+"
 call plug#end()
+let g:latex_to_unicode_tab = "off"
 
 filetype plugin indent on    " required
 
 set cursorline
 set cursorcolumn
+set number 
+set relativenumber
 hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE 
 
 " Python settings
@@ -109,6 +116,7 @@ let g:solarized_termcolors=256
 let g:heman_termcolors=256
 set termguicolors
 colorscheme default
+colorscheme skylake
 "colorscheme cosmic_latte
 "colorscheme darkblue
 "colorscheme base16-black-metal-immortal
@@ -130,12 +138,14 @@ set guioptions-=L  "remove left-hand scroll bar
 
 set noswapfile
 
+
 " Line numbers
 " set nu
 " set relativenumber
 
 " Highlight every occurence of searched thing
 set hlsearch
+set showmatch
 "hi EasyMotionTarget ctermbg=none ctermfg=green
 "hi EasyMotionShade ctermbg=none ctermfg=blue
 
@@ -262,9 +272,8 @@ nmap <C-g>c :Git commit<CR>
 "nmap <c-t> :CommandT<cr>
 let g:Gstatus="<c-g>s"
 
-map <C-n> :NERDTreeToggle<CR>
-map <C-b> :NERDTreeFind<CR>
-let NERDTreeShowHidden=1
+map <C-n> :Fern . -drawer -toggle<CR>
+map <C-b> :Fern . -drawer -reveal=% -toggle<CR>
 
 map K i<CR><Esc>
 " Useful to quit insert mode
@@ -296,6 +305,8 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap tj gt
 nnoremap tk gT
 nnoremap tx :tabclose
+
+nnoremap <C-i> <cmd>Telescope git_files<cr>
 
 "indentaion for python
 set softtabstop=4
