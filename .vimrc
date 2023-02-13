@@ -106,6 +106,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+inoremap <silent><expr> <C-E> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+inoremap <C-s> <c-[>:w<cr>
 
 let python_highlight_all = 1
 autocmd FileType coffee setlocal ts=2 sts=2 sw=2
@@ -123,13 +127,14 @@ colorscheme skylake
 "colorscheme base16-atelier-estuary
 "colorscheme base16-bespin
 "colorscheme base16-harmonic-dark
-"colorscheme base16-brewer
+colorscheme polaris
 set background=dark
 
 "set guifont=Ubuntu\ Mono\ 14
 "set guifont=CMU\ Typewriter\ Text\ \Roman\ 15
 set guifont=Hack\ Regular\ 11
 let g:autoclose_on=0
+let g:vimspector_enable_mappings='HUMAN'
 
 set guioptions-=T  "remove toolbar
 set guioptions-=m  "remove menu bar
@@ -158,9 +163,11 @@ let g:fzf_action = {
 " Default fzf layout
 " - down / up / left / right
 let g:fzf_layout = { 'down': '~30%' }
+    nnoremap <c-e> <cmd>Telescope find_files<cr>
     " FZF {{{
     " <C-p> or <C-t> to search files
     nnoremap <silent> <C-t> :FZF -m<cr>
+
 
     " <M-p> for open buffers
     "nnoremap <silent> <c-l> :GFiles<cr>
