@@ -2,14 +2,21 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+"set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 
 call plug#begin('~/.vim/plugged')
 
 " BASIC
-Plug 'lambdalisue/fern.vim', {'branch':'main'}
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.1'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-telescope/telescope.nvim'
+
+"Plug 'MunifTanjim/nui.nvim', {'branch':'main'}
+"Plug 'VonHeikemen/fine-cmdline.nvim', {'branch':'main'}
+Plug 'sheerun/vim-polyglot'
+
 Plug 'easymotion/vim-easymotion'  "Fly on the vim
 "Plug 'anschnapp/move-less'        " Move less folding
 Plug 'tpope/vim-fugitive'			"Git plugin
@@ -18,6 +25,7 @@ Plug 'vim-python/python-syntax'	"Python syntax
 Plug 'kshenoy/vim-signature'    " visual marks
 "Plug 'zxqfl/tabnine-vim'          "autocompletion
 Plug 'neoclide/coc.nvim', {'branch':'release'}          "autocompletion
+Plug 'puremourning/vimspector'
 
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'nvie/vim-flake8'            "Python linting
@@ -27,11 +35,15 @@ Plug 'vim-test/vim-test'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+Plug 'danlkv/spaceduck', { 'branch': 'main' }
+Plug 'vim-airline/vim-airline'
 " Plug 'soywod/kronos.vim'          " time manager
 
+Plug 'JuliaEditorSupport/julia-vim'
 "Plug 'wincent/Command-T'
 " Plug 'valloric/youcompleteme'
 " Plug 'christoomey/vim-tmux-navigator'
+Plug 'github/copilot.vim', { 'branch': 'main' }
 
 " Elm
 " Plug 'ElmCast/elm-vim'
@@ -39,24 +51,20 @@ Plug 'junegunn/fzf.vim'
 " Rust
 Plug 'rust-lang/rust.vim' 
 
-" Julia
-"Plug 'JuliaEditorSupport/julia-vim'
-
 
 " Python
 Plug 'vim-scripts/indentpython.vim'
 "Plug 'williamjameshandley/vimteractive'
 "Plug 'jupyter-vim/jupyter-vim'
-"Plug 'jaxbot/semantic-highlight.vim'
 "Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " WEB
 "Plug 'KabbAmine/vCoolor.vim'      "color selector
 Plug 'yuezk/vim-js'
-"Plug 'maxmellon/vim-jsx-pretty'
-"Plug 'kchmck/vim-coffee-script'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'kchmck/vim-coffee-script'
 "Plug 'mattn/emmet-vim'
-"Plug 'posva/vim-vue'
+Plug 'posva/vim-vue'
 
 
 " BELLS
@@ -66,15 +74,13 @@ Plug 'yuezk/vim-js'
 Plug 'tomasiser/vim-code-dark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'nightsense/cosmic_latte'
-"Plug 'Sammyalhashe/random_colorscheme.vim'
+Plug 'Sammyalhashe/random_colorscheme.vim'
 "Plug 'chriskempson/base16-vim'
 
 " Plug 'vim-scripts/colorsupport.vim'
 
 " All of your Plugs must be added before the following line
-"
 call plug#end()
-let g:latex_to_unicode_tab = "off"
 
 filetype plugin indent on    " required
 
@@ -82,7 +88,8 @@ set cursorline
 set cursorcolumn
 set number 
 set relativenumber
-hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE 
+set cmdheight=0
+"hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE 
 
 " Python settings
 "autocmd BufWritePost *.py call flake8#Flake8()
@@ -99,15 +106,32 @@ set expandtab
 set softtabstop=4 
 set autoindent
 
-let g:available_colorschemes= ['nord', 'dracula', 'base16-atelier-lakeside']
-
 " coc
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
-inoremap <silent><expr> <C-E> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+
+nmap <c-c>s :call SynGroup()<CR>
+
+hi LspReferenceWrite guibg=lightblue
+hi LspReferenceRead guibg=lighgreen
+" vim function to highlight references to current symbol
+function! HighlightReferences()
+    try | 
+        lua vim.lsp.buf.clear_references()
+        lua vim.lsp.buf.document_highlight()
+        | catch | endtry
+endfunction
+"autocmd CursorHold * silent call HighlightReferences()
+nnoremap <silent> <c-c>h :silent! call HighlightReferences()<cr>
+
+"autocmd! CursorHold,CursorHoldI * lua vim.lsp.buf.document_highlight()
 
 inoremap <C-s> <c-[>:w<cr>
 
@@ -119,22 +143,35 @@ syntax enable
 let g:solarized_termcolors=256
 let g:heman_termcolors=256
 set termguicolors
-colorscheme default
-colorscheme skylake
-"colorscheme cosmic_latte
-"colorscheme darkblue
-"colorscheme base16-black-metal-immortal
-"colorscheme base16-atelier-estuary
-"colorscheme base16-bespin
-"colorscheme base16-harmonic-dark
-colorscheme polaris
+"colorscheme default
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+colorscheme surface_light
+"colorscheme pinky
+"colorscheme surface_light
+let g:airline_theme = 'surface_dark'
+let g:airline_extensions = []
+
+if !empty($THEME_ADAPTIVE)
+    if $THEME_ADAPTIVE == 'dark'
+        colorscheme surface_dark
+        let g:airline_theme = 'surface_dark'
+    elseif $THEME_ADAPTIVE == 'light'
+        colorscheme surface_light
+        let g:airline_theme = 'light_carrot'
+    endif
+endif
+
 set background=dark
 
-"set guifont=Ubuntu\ Mono\ 14
-"set guifont=CMU\ Typewriter\ Text\ \Roman\ 15
+set guifont=Ubuntu\ Mono\ 14
+set guifont=CMU\ Typewriter\ Text\ \Roman\ 15
 set guifont=Hack\ Regular\ 11
-let g:autoclose_on=0
-let g:vimspector_enable_mappings='HUMAN'
+let g:autoclose_on=1
 
 set guioptions-=T  "remove toolbar
 set guioptions-=m  "remove menu bar
@@ -143,6 +180,9 @@ set guioptions-=L  "remove left-hand scroll bar
 
 set noswapfile
 
+" Debugger setup
+"
+let g:vimspector_enable_mappings = 'HUMAN'
 
 " Line numbers
 " set nu
@@ -150,9 +190,12 @@ set noswapfile
 
 " Highlight every occurence of searched thing
 set hlsearch
-set showmatch
 "hi EasyMotionTarget ctermbg=none ctermfg=green
 "hi EasyMotionShade ctermbg=none ctermfg=blue
+"
+"let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+" If you want gitignored files:
+"let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs --hidden'
 
 let g:fzf_action = {
   \ 'ctrl-r': 'up',
@@ -168,14 +211,13 @@ let g:fzf_layout = { 'down': '~30%' }
     " <C-p> or <C-t> to search files
     nnoremap <silent> <C-t> :FZF -m<cr>
 
-
     " <M-p> for open buffers
     "nnoremap <silent> <c-l> :GFiles<cr>
     command! GitFiles call fzf#run(fzf#wrap({'source':'git ls-files', 'options':'--bind ctrl-s:up,ctrl-h:down'}))
     nnoremap <silent> <c-l> :GitFiles<cr>
 
     " <M-p> for open buffers
-    nnoremap <silent> <c-g> :Buffers<cr>
+    nnoremap <silent> <c-g> :Telescope buffers<cr>
     " for Lines
     nnoremap <silent> <c-f> :Lines<cr>
 
@@ -272,15 +314,15 @@ nmap s <Plug>(easymotion-overwin-f2)
 " Without these mappings, `n` & `N` works fine. (These mappings just provide
 " different highlight method and have some other features )
 
-nmap <C-g>s :Git status<CR>
+nmap <C-g>s :Gstatus<CR>
 nmap <C-g>w :Gwrite<CR>
-nmap <C-g>c :Git commit<CR>
+nmap <C-g>c :Gcommit<CR>
 
 "nmap <c-t> :CommandT<cr>
 let g:Gstatus="<c-g>s"
 
-map <C-n> :Fern . -drawer -toggle<CR>
-map <C-b> :Fern . -drawer -reveal=% -toggle<CR>
+map <C-n> :NvimTreeToggle<CR>
+map <C-b> :NvimTreeFindFile<CR>
 
 map K i<CR><Esc>
 " Useful to quit insert mode
@@ -288,7 +330,9 @@ imap jj <Esc>
 imap <C-d> <Esc>
 " fugitive git bindings
 nnoremap <space>ga :Git add %:p<CR><CR>
-nnoremap <space>gs :Git status<CR>
+nnoremap <space>gs :Git<CR>
+nnoremap <space>G :Git<CR>
+nnoremap <space>gc :Git commit -v -q<CR>
 nnoremap <space>gt :Git commit -v -q %:p<CR>
 nnoremap <space>gp :Git push<CR>
 nnoremap <space>gd :Gdiff<CR>
@@ -312,8 +356,6 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap tj gt
 nnoremap tk gT
 nnoremap tx :tabclose
-
-nnoremap <C-i> <cmd>Telescope git_files<cr>
 
 "indentaion for python
 set softtabstop=4
