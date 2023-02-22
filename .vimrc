@@ -12,6 +12,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim'
 
 "Plug 'MunifTanjim/nui.nvim', {'branch':'main'}
 "Plug 'VonHeikemen/fine-cmdline.nvim', {'branch':'main'}
