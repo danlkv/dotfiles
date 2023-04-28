@@ -1,5 +1,5 @@
 
-set $mod Mod1
+set $mod Mod4
 
 # Files shortcuts
 set $TERM st
@@ -15,7 +15,7 @@ bindsym $mod+q exec "kill -s USR1 $(pidof deadd-notification-center)"
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:monospace 12
 
 bar {
     mode hide
@@ -38,13 +38,13 @@ font pango:DejaVu Sans Mono 0
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec lxterminal
+bindsym $mod+Return exec $TERM
 # Dropdown Terminal set to postion and floating mode
 # bindsym $mod exec --no-startup-id tilda 
 for_window [class="Tilda"] floating enable
 for_window [class="^.*"] border pixel 0
-gaps inner 15
-gaps outer 0
+gaps inner 20
+gaps outer 35
 smart_gaps on
 
 
@@ -229,6 +229,12 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 new_window 1pixel
+
+exec picom
+exec setxkbmap -option "ctrl:nocaps"
+exec $TERM
+exec feh --bg-scale ~/Pictures/Wallpapers/current
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
