@@ -6,6 +6,8 @@
 
 config_version: 2
 settings:
+  auto_save.session:
+    global: true
   bindings.commands:
     global:
       insert:
@@ -14,20 +16,33 @@ settings:
         ',j': :run-with-count 5 scroll down
         ',m': spawn mpv {url}
         <Ctrl+Shift+h>: :open qute://history
+        <Ctrl+Shift+r>: :config-source
         <Ctrl+f>: :hint all tab-bg --rapid
         <Ctrl+h>: :open qute://history
         <Ctrl+m>: fake-key
         <Ctrl+o>: download-open
         ft: '`:hint all tab-bg --rapid`'
+        j: scroll-px 0 150
         jj: 4j
+        k: scroll-px 0 -150
         sR: :spawn --userscript speed_reader
         tL: open https://outline.com/{url}
         tR: :spawn --userscript readability
         u: hint
-  content.notifications:
+  colors.webpage.darkmode.enabled:
+    global: false
+  content.notifications.enabled:
     https://www.reddit.com: false
   content.pdfjs:
     global: true
+  content.user_stylesheets:
+    global: solarized-dark-all-sites.css
+  fonts.default_family:
+    global: Hack
+  fonts.default_size:
+    global: 12pt
+  fonts.hints:
+    global: bold default_size default_family
   hints.auto_follow_timeout:
     global: 400
   hints.chars:
@@ -56,9 +71,13 @@ settings:
     - q*
   keyhint.delay:
     global: 0
+  scrolling.smooth:
+    global: false
   tabs.position:
     global: top
   url.searchengines:
     global:
       DEFAULT: https://google.com/search?q={}
       DUCK: https://duckduckgo.com/?q={}
+  zoom.default:
+    global: 100%
