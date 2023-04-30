@@ -2,7 +2,8 @@ local wezterm = require 'wezterm'
 local config = {}
 
 
-config.font_size = 20.0
+config.font_size = 26.0
+config.font = wezterm.font("Iosevka Slab", { weight = 'Light' })
 
 thememap = {
     dark = "Catppuccin Macchiato",

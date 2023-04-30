@@ -3,7 +3,9 @@ config.load_autoconfig()
 import importlib
 theme = importlib.import_module('qutebrowser-theme')
 c.zoom.default = '185%'
-c.fonts.default_size = '20pt'
+c.fonts.default_size = '24pt'
+#c.fonts.default_family = 'Iosevka Slab Extended'
+c.fonts.default_family = 'Iosevka Aile'
 
 def set_dark_mode(c):
     theme.setup(c, 'macchiato', True)

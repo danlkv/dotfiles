@@ -1,4 +1,5 @@
-configuration{
+configuration {
+    font: "Iosevka 20";
     modi: "run,drun,window";
     icon-theme: "Oranchelo";
     show-icons: true;
@@ -14,5 +15,11 @@ configuration{
     sidebar-mode: true;
 }
 
-@theme "catppuccin-latte"
+@theme "catppuccin-macchiato"
 
+* {
+    font: "Iosevka Term Extended 22";
+    //font: "Iosevka Term Slab Extended 22";
+    //font: "JetBrainsMono Nerd Font 20";
+    width: 1200;
+}
