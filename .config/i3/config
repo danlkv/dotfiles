@@ -21,16 +21,6 @@ bindsym XF86AudioMute exec "pactl set-sink-mute `pactl list sinks short | grep R
 font pango:Iosevka thin 14
 for_window [class=".*"] title_format "<span>  %title </span>"
 
-bar {
-    font pango:Iosevka 20
-    colors {
-        background #1d2022
-    }
-    mode hide
-    hidden_state hide
-    modifier $mod
-    status_command i3status
-}
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -168,12 +158,16 @@ bindsym $mod+shift+f fullscreen toggle
 bindsym $mod+x layout stacking
 bindsym $mod+t layout tabbed
 bindsym $mod+e layout toggle split
+bindsym $mod exec "polybar-msg cmd toggle"
+bindsym --release $mod exec "polybar-msg cmd toggle"
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+space focus mode_toggle;
+bindsym $mod+c exec "polybar-msg cmd show"
+bindsym  --release $mod+c exec "polybar-msg cmd hide"
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -259,8 +253,9 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 new_window 1pixel
 
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always feh --randomize --bg-scale ~/Pictures/Wallpapers/abstract_dark
 exec picom
 exec setxkbmap -option "ctrl:nocaps"
 exec unclutter
 exec $TERM
-exec feh --bg-scale ~/Pictures/Wallpapers/current
