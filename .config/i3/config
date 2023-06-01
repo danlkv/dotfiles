@@ -6,9 +6,12 @@ set $TERM st
 set $EDITOR nvim
 bindsym $mod+apostrophe exec "st -e $EDITOR `realpath ~/f-files/1`"
 bindsym $mod+comma exec "st -e $EDITOR `realpath ~/f-files/2`"
-bindsym $mod+period exec "st -e $EDITOR `realpath ~/f-files/3`"
+bindsym $mod+period exec "st -e $EjITOR `realpath ~/f-files/3`"
+bindsym $mod+q exec "qutebrowser"
 
-bindsym $mod+q exec "kill -s USR1 $(pidof deadd-notification-center)"
+bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume `pactl list sinks short | grep RUNNING | cut -f1` +10%"
+bindsym XF86AudioLowerVolume exec "pactl set-sink-volume `pactl list sinks short | grep RUNNING | cut -f1` -10%"
+bindsym XF86AudioMute exec "pactl set-sink-mute `pactl list sinks short | grep RUNNING | cut -f1` toggle"
 
 
 # for_window [title="f-files"] floating enable
