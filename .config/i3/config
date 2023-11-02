@@ -13,6 +13,8 @@ bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume `pactl list sinks short
 bindsym XF86AudioLowerVolume exec "pactl set-sink-volume `pactl list sinks short | grep RUNNING | cut -f1` -10%"
 bindsym XF86AudioMute exec "pactl set-sink-mute `pactl list sinks short | grep RUNNING | cut -f1` toggle"
 
+bindsym XF86MonBrightnessUp exec "brightnessctl s 10%+"
+bindsym XF86MonBrightnessDown exec "brightnessctl s 10%-"
 
 # for_window [title="f-files"] floating enable
 
@@ -46,11 +48,18 @@ for_window [class="zoom" title="Zoom - Licensed Account"] floating enable
 for_window [class="zoom" title="Zoom - Licensed Account"] resize set 840 640
 no_focus [class="zoom"]
 #for_window [class="zoom" title="Zoom Meeting"] floating disable
+for_window [floating title="Visual Studio Code"] move position 150 150
+floating_maximum_size 2700 x 1700
 
-gaps inner 32
-gaps outer -8
-smart_gaps on
+gaps outer 64
+gaps inner 64
+gaps horizontal 256
+gaps vertical 64
+smart_gaps off
 
+workspace 2 gaps horizontal 76
+workspace 2 gaps inner 82
+workspace 2 gaps vertical 186
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -74,8 +83,8 @@ bindsym $mod+z exec "wezterm"
 
 bindsym Ctrl+space exec rofi -show combi
 
-bindsym $mod+Prior move workspace to output up
-bindsym $mod+Next move workspace to output down
+bindsym $mod+greater move workspace to output next
+bindsym $mod+less move workspace to output previous
 bindsym $mod+n focus output primary
 
 
@@ -86,28 +95,28 @@ bindsym $mod+n focus output primary
 
 # color defines for zenburn styled i3
 # -- Dark 
-set $bg     #040309
-set $fg     #1d2022
-set $hi     #efef8f
-set $ac     #16172d
-set $tx     #fcf0f1
-set $ia     #c1c3cc
-set $be     #8faf9f
-set $yw     #ccdc90
-set $gn     #88b090
-set $rd     #e83333
+   set $bg     #040309
+   set $fg     #1d2022
+   set $hi     #efef8f
+   set $ac     #16172d
+   set $tx     #fcf0f1
+   set $ia     #c1c3cc
+   set $be     #8faf9f
+   set $yw     #ccdc90
+   set $gn     #88b090
+   set $rd     #e83333
 
 # -- Light
-#   set $bg     #cac9e8
-#   set $fg     #1d2022
-#   set $hi     #efef8f
-#   set $ac     #fcf4f3
-#   set $tx     #1d2022
-#   set $ia     #1d2022
-#   set $be     #8faf9f
-#   set $yw     #ccdc90
-#   set $gn     #88b090
-#   set $rd     #e89393
+#  set $bg     #cac9e8
+#  set $fg     #1d2022
+#  set $hi     #efef8f
+#  set $ac     #fcf4f3
+#  set $tx     #1d2022
+#  set $ia     #1d2022
+#  set $be     #8faf9f
+#  set $yw     #ccdc90
+#  set $gn     #88b090
+#  set $rd     #e89393
 
 
 # set some nice colors      border     background  text
@@ -254,7 +263,7 @@ bindsym $mod+r mode "resize"
 new_window 1pixel
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always feh --randomize --bg-scale ~/Pictures/Wallpapers/abstract_dark
+exec_always feh --randomize --bg-fill ~/Pictures/Wallpapers/current
 exec picom
 exec setxkbmap -option "ctrl:nocaps"
 exec unclutter
