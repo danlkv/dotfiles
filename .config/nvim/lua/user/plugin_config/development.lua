@@ -9,7 +9,6 @@ return {
             "nvim-telescope/telescope.nvim", -- optional
         },
         init = function()
-            require 'flexoki' -- Fix to load colors before git
             local neogit = require 'neogit'
             neogit.setup {}
             vim.keymap.set('n', '<leader>gs', neogit.open)

@@ -10,6 +10,7 @@ vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 
+vim.cmd 'set formatoptions+=a'
 
 vim.keymap.set('n', '<c-s>', ':update<cr>', { silent = true })
 
