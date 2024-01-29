@@ -10,6 +10,7 @@ vim.keymap.set('n', '<leader>tf', telescope_builtin.find_files, {})
 vim.keymap.set('n', '<leader>tg', telescope_builtin.live_grep, {})
 vim.keymap.set('n', '<leader>tb', telescope_builtin.buffers, {})
 vim.keymap.set('n', '<leader>th', telescope_builtin.help_tags, {})
+vim.keymap.set('n', '<leader>tc', telescope_builtin.command_history, {})
 ---- Telescope lsp jumps
 vim.keymap.set('n', '<leader>tr', telescope_builtin.lsp_references)
 vim.keymap.set('n', '<leader>ts', telescope_builtin.lsp_document_symbols)
