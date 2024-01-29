@@ -51,15 +51,21 @@ no_focus [class="zoom"]
 for_window [floating title="Visual Studio Code"] move position 150 150
 floating_maximum_size 2700 x 1700
 
-gaps outer 64
-gaps inner 64
-gaps horizontal 256
-gaps vertical 64
+gaps outer -8
+gaps inner 32
+gaps horizontal 128
+gaps vertical 16
 smart_gaps off
 
-workspace 2 gaps horizontal 76
-workspace 2 gaps inner 82
-workspace 2 gaps vertical 186
+workspace 2 gaps horizontal 56
+workspace 2 gaps inner 32
+workspace 2 gaps vertical 66
+
+# Gaps adjustments
+bindsym $mod+shift+s gaps horizontal current minus 16
+bindsym $mod+shift+v gaps vertical current minus 16
+bindsym $mod+ctrl+s gaps horizontal current plus 16
+bindsym $mod+ctrl+v gaps vertical current plus 16
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -95,29 +101,40 @@ bindsym $mod+n focus output primary
 
 # color defines for zenburn styled i3
 # -- Dark 
-   set $bg     #040309
-   set $fg     #1d2022
-   set $hi     #efef8f
-   set $ac     #16172d
-   set $tx     #fcf0f1
-   set $ia     #c1c3cc
-   set $be     #8faf9f
-   set $yw     #ccdc90
-   set $gn     #88b090
-   set $rd     #e83333
-
-# -- Light
-#  set $bg     #cac9e8
+#  set $bg     #040309
 #  set $fg     #1d2022
 #  set $hi     #efef8f
-#  set $ac     #fcf4f3
-#  set $tx     #1d2022
-#  set $ia     #1d2022
+#  set $ac     #16172d
+#  set $tx     #fcf0f1
+#  set $ia     #c1c3cc
 #  set $be     #8faf9f
 #  set $yw     #ccdc90
 #  set $gn     #88b090
-#  set $rd     #e89393
+#  set $rd     #e83333
 
+# -- Light
+# set $bg     #cac9e8
+# set $fg     #1d2022
+# set $hi     #efef8f
+# set $ac     #fcf4f3
+# set $tx     #1d2022
+# set $ia     #1d2022
+# set $be     #8faf9f
+# set $yw     #ccdc90
+# set $gn     #88b090
+# set $rd     #e89393
+
+# -- Brown
+  set $bg     #4b332F
+  set $fg     #4d6042
+  set $hi     #efef8f
+  set $ac     #36272d
+  set $tx     #fcf0f1
+  set $ia     #c1c3cc
+  set $be     #8faf9f
+  set $yw     #ccdc90
+  set $gn     #88b090
+  set $rd     #e83333
 
 # set some nice colors      border     background  text
 client.focused              $ac        $ac         $tx
@@ -155,6 +172,8 @@ bindsym $mod+Shift+Right move right
 # split in horizontal orientation
 bindsym $mod+minus split h
 bindsym $mod+v split h
+
+
 
 # split in vertical orientation
 bindsym $mod+s split v
@@ -199,7 +218,6 @@ assign [class="TelegramDesktop"] $ws9
 set $ws10 "10: chrome"
 assign [class="Google-chrome"] $ws10
 
-workspace $ws9 output eDP-1
 workspace $ws9 output eDP-1
 
 # switch to workspace
