@@ -51,6 +51,7 @@ no_focus [class="zoom"]
 for_window [floating title="Visual Studio Code"] move position 150 150
 floating_maximum_size 2700 x 1700
 
+# -- Gaps
 gaps outer -8
 gaps inner 32
 gaps horizontal 128
@@ -61,11 +62,15 @@ workspace 2 gaps horizontal 56
 workspace 2 gaps inner 32
 workspace 2 gaps vertical 66
 
-# Gaps adjustments
+# --- Gaps adjustments
 bindsym $mod+shift+s gaps horizontal current minus 16
 bindsym $mod+shift+v gaps vertical current minus 16
 bindsym $mod+ctrl+s gaps horizontal current plus 16
 bindsym $mod+ctrl+v gaps vertical current plus 16
+
+# -- Opacity
+bindsym $mod+shift+t exec picom-trans -c +5
+bindsym $mod+ctrl+t exec picom-trans -c -5
 
 # kill focused window
 bindsym $mod+Shift+q kill
