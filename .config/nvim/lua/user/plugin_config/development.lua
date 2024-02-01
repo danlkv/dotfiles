@@ -41,4 +41,9 @@ return {
         end
 
     },
+
+    -- Python
+    {
+        'psf/black'
+    },
 }

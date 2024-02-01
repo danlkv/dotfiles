@@ -10,9 +10,10 @@ vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 
-vim.cmd 'set formatoptions+=a'
+-- vim.cmd 'set formatoptions+=a'
 
 vim.keymap.set('n', '<c-s>', ':update<cr>', { silent = true })
+vim.keymap.set('n', '<leader>q', ':wq<cr>', { silent = true })
 
 require 'user'
 require 'my_modules.transparent'
