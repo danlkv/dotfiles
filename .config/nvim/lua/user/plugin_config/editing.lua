@@ -9,12 +9,46 @@ lsp_zero.on_attach(function(client, bufnr)
     -- to learn the available actions
     lsp_zero.default_keymaps({ buffer = bufnr })
     lsp_zero.buffer_autoformat()
+
+    -- Svelte
+    -- https://github.com/sveltejs/language-tools/issues/2008
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = { "*.js", "*.ts" },
+        callback = function(ctx)
+            if client.name == "svelte" then
+                client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+            end
+        end,
+    })
 end)
 
-local lspconfig = require 'lspconfig'
-lspconfig.pyright.setup {}
-local lua_opts = lsp_zero.nvim_lua_ls()
-lspconfig.lua_ls.setup(lua_opts)
+
+--Mason Setup
+require("mason").setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+        },
+    },
+})
+
+--Mason-LSP Setup
+require("mason-lspconfig").setup({
+    handlers = {
+        lsp_zero.default_setup
+    },
+    ensure_installed = {
+        "lua_ls",
+        "cssls",
+        "jsonls",
+        "pyright",
+        "tsserver",
+        "eslint",
+        "html",
+        "svelte",
+        "rust_analyzer",
+    },
+})
 
 require 'lsp_signature'.setup {
     hint_prefix = ' '
@@ -26,6 +60,16 @@ vim.o.foldcolumn = '1' -- '0' is not bad
 vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
+-- Auto-open float using built-in Lua API
+vim.api.nvim_create_autocmd("CursorHold", {
+    callback = function()
+        vim.diagnostic.open_float(nil, { focus = false })
+    end
+})
+-- set cursorhold time
+vim.o.updatetime = 500
+
+
 
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
 vim.keymap.set('n', 'zR', require('ufo').openAllFolds)

@@ -7,6 +7,8 @@
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "6c0f5b42993a77db101b7bbaf36cc2940926f478" },
   "lsp_signature.nvim": { "branch": "master", "commit": "fed2c8389c148ff1dfdcdca63c2b48d08a50dea0" },
   "lualine.nvim": { "branch": "master", "commit": "7d131a8d3ba5016229e8a1d08bf8782acea98852" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "fe4cce44dec93c69be17dad79b21de867dde118a" },
+  "mason.nvim": { "branch": "main", "commit": "c43eeb5614a09dc17c03a7fb49de2e05de203924" },
   "melange-nvim": { "branch": "master", "commit": "258e5afa978aa886e7ac346612e5f920a2b6be59" },
   "neodev.nvim": { "branch": "main", "commit": "64b2a51b02c6f2ae177c745e4d8bc801a339fe09" },
   "neogit": { "branch": "master", "commit": "ce0c369ccdba3f644a3b28f4c053421f435352c9" },

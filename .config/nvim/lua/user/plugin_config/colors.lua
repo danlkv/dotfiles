@@ -32,6 +32,10 @@ function Colors_override_fn(name)
     elseif vim.o.background == 'dark' then
         -- Dark
         vim.api.nvim_set_hl(0, 'Normal', { bg = "#020306", fg = "#ecf1c1" })
+
+        vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#2f552f" })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#552f2f" })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#555125" })
     end
 end
 
@@ -125,6 +129,7 @@ return {
                 providers = {
                     'lsp',
                     'treesitter',
+                    'regex',
                 },
                 -- delay: delay in milliseconds
                 delay = 40,
@@ -144,6 +149,7 @@ return {
 
             vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#e5f5e5" })
             vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#f5e5e5" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#f5f1e5" })
         end
 
     },
@@ -245,13 +251,18 @@ return {
     --
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    config = function(_, opts)
+        --setup treesitter
+        treesitter = require 'nvim-treesitter.configs'
+        treesitter.setup({
+            ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte" },
+            sync_install = false,
+            highlight = { enable = true },
+            indent = { enable = true },
+            auto_install = true,
+        })
+    end,
 
-    opts = {
-        ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html" },
-        sync_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },
-    }
 
 }, {
 
