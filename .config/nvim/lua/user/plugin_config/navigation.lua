@@ -6,15 +6,18 @@ vim.keymap.set('n', 'tk', 'gT')
 
 -- Telescope
 local telescope_builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>tf', telescope_builtin.find_files, {})
-vim.keymap.set('n', '<leader>tg', telescope_builtin.live_grep, {})
+vim.keymap.set('n', '<leader>tf', function()
+    telescope_builtin.find_files({
+        find_command = { 'fd', '--hidden', '--follow', '--type', 'f' } })
+end, {})
+vim.keymap.set('n', '<leader>tg', function() telescope_builtin.live_grep({ hidden = true }) end, {})
 vim.keymap.set('n', '<leader>tb', telescope_builtin.buffers, {})
 vim.keymap.set('n', '<leader>th', telescope_builtin.help_tags, {})
 vim.keymap.set('n', '<leader>tc', telescope_builtin.command_history, {})
 ---- Telescope lsp jumps
 vim.keymap.set('n', '<leader>tr', telescope_builtin.lsp_references)
 vim.keymap.set('n', '<leader>ts', telescope_builtin.lsp_document_symbols)
-vim.keymap.set('n', '<c-t>', telescope_builtin.find_files, {})
+vim.keymap.set('n', '<c-t>', function() telescope_builtin.find_files({ hidden = true }) end, {})
 vim.keymap.set('n', '<c-j>', telescope_builtin.lsp_document_symbols, {})
 
 local telescope_actions = require('telescope.actions')
