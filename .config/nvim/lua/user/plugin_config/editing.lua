@@ -51,7 +51,7 @@ require("mason-lspconfig").setup({
 })
 
 require 'lsp_signature'.setup {
-    hint_prefix = ' '
+   hint_prefix = ' '
 }
 
 -- Folding
@@ -72,9 +72,9 @@ vim.o.updatetime = 500
 
 
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+--vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+--vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+--vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
 
 -- Option 2: nvim lsp as LSP client
@@ -92,4 +92,4 @@ for _, ls in ipairs(language_servers) do
         -- you can add other fields for setting up lsp server in this table
     })
 end
-require('ufo').setup()
+--require('ufo').setup()

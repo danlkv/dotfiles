@@ -28,10 +28,25 @@ require("lazy").setup({
     { 'williamboman/mason-lspconfig.nvim' },
     { 'VonHeikemen/lsp-zero.nvim',         branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
-    { 'hrsh7th/cmp-nvim-lsp' },
-    { '/github/copilot.vim' },
+    { 'github/copilot.vim' },
     -- {'L3MON4D3/LuaSnip'},
-    { "folke/neodev.nvim",                 opts = {} },
+    --- Editing lua configuration files
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+    },
+    {
+        'hrsh7th/cmp-nvim-lsp',
+        opts = function(_, opts)
+            opts.sources = opts.sources or {}
+            table.insert(opts.sources, {
+                name = "lazydev",
+                group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+            })
+        end,
+    },
+    -- #
+    --- Vim search highlighting tweak
     { "romainl/vim-cool" },
 
     {
@@ -47,7 +62,7 @@ require("lazy").setup({
         config = function(_, opts) require 'lsp_signature'.setup(opts) end
     },
     ---- folding
-    { 'kevinhwang91/nvim-ufo',                  dependencies = 'kevinhwang91/promise-async' },
+    --    { 'kevinhwang91/nvim-ufo',                  dependencies = 'kevinhwang91/promise-async' },
 
     -- Development
     { import = 'user.plugin_config.development' },
