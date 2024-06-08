@@ -146,10 +146,6 @@ return {
                 large_file_overrides = nil,
                 min_count_to_highlight = 2,
             })
-
-            vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#e5f5e5" })
-            vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#f5e5e5" })
-            vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#f5f1e5" })
         end
 
     },
