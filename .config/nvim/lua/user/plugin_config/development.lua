@@ -33,9 +33,11 @@ return {
         enabled = true,
         event = "VeryLazy",
         dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-neotest/neotest-python",
             "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-neotest/neotest-python"
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter"
         },
         config = function(_, opts)
             vim.g.python_host_skip_check = 1

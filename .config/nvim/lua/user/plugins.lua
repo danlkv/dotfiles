@@ -55,11 +55,20 @@ require("lazy").setup({
     { "romainl/vim-cool" },
 
     --- Languages
+    ----- Markdown preview
     {
-        "iamcco/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        ft = { "markdown" },
-        build = function() vim.fn["mkdp#util#install"]() end,
+        "toppair/peek.nvim",
+        event = { "VeryLazy" },
+        build = "deno task --quiet build:fast",
+        config = function()
+            require("peek").setup({
+                -- Provide your location to the browser
+                app = "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+                --app = "/mnt/c/Program Files/Mozilla Firefox/firefox.exe",
+            })
+            vim.api.nvim_create_user_command("MarkdownOpen", require("peek").open, {})
+            vim.api.nvim_create_user_command("MarkdownClose", require("peek").close, {})
+        end,
     },
     {
         "lervag/vimtex",
