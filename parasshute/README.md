@@ -6,6 +6,12 @@ Do you have access to your favorite tools? Probably not.
 Parasshute is a tool that helps you parachute into a clean machine and build
 your tools from git.
 
+See also:
+
+- [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) - can install packages
+  without root access. Not tested, may be portable; not as hackable as bash,
+  although quite hackable and more mature.
+
 ## Usage
 
 1. See available tools

@@ -25,24 +25,36 @@ fi
 # check if make and cmake are installed
 
 
+# -- Utils
+
+function check_command() {
+    if ! command -v $1 > /dev/null; then
+        echo "$1 is not installed"
+        exit 1
+    fi
+}
 
 # -- Install
 echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
 echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 
 nvim_install_from_source=false
+
+# ---- helper functions
+#
 function install_from_source() {
     # Download sources and build
     # DEPEND: 
     # - curl, gettext-dev and ninja
     # Details: https://github.com/neovim/neovim/blob/stable/BUILD.md#build-prerequisites
+    check_command curl
+    check_command gettext
+    check_command ninja
+
     mkdir -p $SOURCE_DIR
     echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
     nvim_git_repo="https://github.com/neovim/neovim.git"
-    git clone --depth 1 --branch stable $nvim_git_repo $SOURCE_DIR/neovim || {
-        echo "!Failed to clone"
-        exit 1
-    }
+    git clone --depth 1 --branch stable $nvim_git_repo $SOURCE_DIR/neovim || { exit 1; }
     pushd $SOURCE_DIR/neovim
     make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build"; exit 1; }
     make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1; }
@@ -67,10 +79,13 @@ function install_from_distribution() {
     popd
     nvim --version || { return 1; }
 }
+#
+# ----
 
 if $nvim_install_from_source; then
     install_from_source 
 else
+    #
     # NOTE: will try to install from distribution,
     #   but if it fails, will fallback to source.
     #   This will leave an archive.
