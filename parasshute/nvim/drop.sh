@@ -72,7 +72,8 @@ if $nvim_install_from_source; then
     install_from_source 
 else
     # NOTE: will try to install from distribution,
-    #   but if it fails, will fallback to source
+    #   but if it fails, will fallback to source.
+    #   This will leave an archive.
     #
     install_from_distribution || {
         echo "!Failed to install from binary distribution"
@@ -81,7 +82,5 @@ else
     }
 fi
 
-else
-fi
 export PATH=$INSTALL_PREFIX/bin:$PATH
 nvim --version
