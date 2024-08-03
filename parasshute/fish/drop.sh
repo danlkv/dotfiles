@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # if `fish` exists, return 0
-fish_path=$(command -v fish)
+# Use install path only to check the binary
+path=$INSTALL_PREFIX/bin:$PATH
+fish_path=$(PATH=$path command -v fish)
 echo "Fish shell path: $fish_path"
 test -z "$fish_path" || {
     echo "Fish shell is already here: $fish_path"
@@ -67,5 +69,5 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-PATH=$INSTALL_PREFIX/bin:$PATH
+export PATH=$INSTALL_PREFIX/bin:$PATH
 echo "Fish shell is installed at: $(command -v fish)"
