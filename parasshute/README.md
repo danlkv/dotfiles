@@ -9,8 +9,9 @@ your tools from git.
 See also:
 
 - [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) - can install packages
-  without root access. Not tested, may be portable; not as hackable as bash,
-  although quite hackable and more mature.
+  without root access. Although quite hackable and more mature, supports
+  versions. Not tested, may be portable; not as hackable as bash.
+  Plus, `parasshute` allows to specify highly specific plugins like `fish-tide`.
 
 ## Usage
 
