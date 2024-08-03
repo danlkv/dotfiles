@@ -31,25 +31,27 @@ echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
 echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 
 nvim_install_from_source=false
-
-if $nvim_install_from_source; then
+function install_from_source() {
     # Download sources and build
-    # Needs curl and ninja
+    # DEPEND: 
+    # - curl, gettext-dev and ninja
     # Details: https://github.com/neovim/neovim/blob/stable/BUILD.md#build-prerequisites
     mkdir -p $SOURCE_DIR
     echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
-    git clone https://github.com/neovim/neovim.git $SOURCE_DIR/neovim
+    nvim_git_repo="https://github.com/neovim/neovim.git"
+    git clone --depth 1 --branch stable $nvim_git_repo $SOURCE_DIR/neovim || {
+        echo "!Failed to clone"
+        exit 1
+    }
     pushd $SOURCE_DIR/neovim
-    git checkout stable
-    make CMAKE_BUILD_TYPE=Release || {
-        echo "!Failed to build neovim"
-        exit 1
-    }
-    make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || {
-        echo "!Failed to install neovim"
-        exit 1
-    }
-else
+    make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build" exit 1 }
+    make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install" exit 1 }
+}
+
+function install_from_distribution() {
+    # Install from distribution
+    # DEPEND: 
+    # - wget and tar
     # Download binaries
     mkdir -p $SOURCE_DIR
     echo "Downloading neovim compiled binaries archive into SOURCE_DIR: $SOURCE_DIR"
@@ -59,13 +61,15 @@ else
         echo "!Failed to download neovim"
         exit 1
     }
-    tar -xvf nvim-linux64.tar.gz || {
-        echo "!Failed to extract neovim"
-        exit 1
-    }
+    tar -xvf nvim-linux64.tar.gz || { echo "!Failed to extract" exit 1 }
     mkdir -p $INSTALL_PREFIX/bin
     ln -s $PWD/nvim-linux64/bin/* $INSTALL_PREFIX/bin
     popd
-    export PATH=$INSTALL_PREFIX/bin:$PATH
-    nvim --version
+}
+
+if $nvim_install_from_source; then
+
+else
 fi
+export PATH=$INSTALL_PREFIX/bin:$PATH
+nvim --version
