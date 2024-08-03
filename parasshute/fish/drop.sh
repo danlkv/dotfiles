@@ -4,7 +4,6 @@
 # Use install path only to check the binary
 path=$INSTALL_PREFIX/bin:$PATH
 fish_path=$(PATH=$path command -v fish)
-echo "Fish shell path: $fish_path"
 test -z "$fish_path" || {
     echo "Fish shell is already here: $fish_path"
     exit 0
@@ -35,7 +34,7 @@ if ! command -v cmake > /dev/null; then
     exit 1
 fi
 
-# Optional dependencies
+# DEPEND: Optional dependencies
 # - ncurses-dev (how to check?)
 # - pcre2-dev (how to check?)
 #
@@ -49,7 +48,7 @@ echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 mkdir -p $SOURCE_DIR
 git clone https://github.com/fish-shell/fish-shell.git $SOURCE_DIR/fish-shell
 #
-# Note: fish will port to rust in future.
+# NOTE: fish will port to rust in future.
 #   The reason is that developers want to be trendy, and are tired of C++.
 #   For me, rust is a good but heavy language (.5GB on alpine), with llvm on top.
 #   The build time is longer.
