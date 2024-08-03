@@ -52,9 +52,11 @@ function install_from_source() {
     check_command ninja
 
     mkdir -p $SOURCE_DIR
-    echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
-    nvim_git_repo="https://github.com/neovim/neovim.git"
-    git clone --depth 1 --branch stable $nvim_git_repo $SOURCE_DIR/neovim || { exit 1; }
+    if [ ! -d $SOURCE_DIR/neovim ]; then
+        echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
+        nvim_git_repo="https://github.com/neovim/neovim.git"
+        git clone --depth 1 --branch stable $nvim_git_repo $SOURCE_DIR/neovim || { exit 1; }
+    fi
     pushd $SOURCE_DIR/neovim
     make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build"; exit 1; }
     make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1; }
