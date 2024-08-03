@@ -44,8 +44,8 @@ function install_from_source() {
         exit 1
     }
     pushd $SOURCE_DIR/neovim
-    make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build"; exit 1 }
-    make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1 }
+    make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build"; exit 1; }
+    make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1; }
 }
 
 function install_from_distribution() {
@@ -61,11 +61,11 @@ function install_from_distribution() {
         echo "!Failed to download neovim"
         exit 1
     }
-    tar -xvf nvim-linux64.tar.gz || { echo "!Failed to extract"; exit 1 }
+    tar -xvf nvim-linux64.tar.gz || { echo "!Failed to extract"; exit 1; }
     mkdir -p $INSTALL_PREFIX/bin
     ln -s $PWD/nvim-linux64/bin/* $INSTALL_PREFIX/bin
     popd
-    nvim --version || { return 1 }
+    nvim --version || { return 1; }
 }
 
 if $nvim_install_from_source; then

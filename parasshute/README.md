@@ -33,3 +33,7 @@ These may be helpful to check
 
 - `NOTE`: general info
 - `DEPEND`: info about dependencies
+
+## Dev notes
+
+- terminate bodies of single-line functions with semicolon
