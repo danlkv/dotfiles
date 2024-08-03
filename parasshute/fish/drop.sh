@@ -26,7 +26,7 @@ echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 # if `fish` does not exist, install it
 
 mkdir -p $SOURCE_DIR
-git clone https://github.com/fish-shell/fish-shell.git $SOURCE_DIR/
+git clone https://github.com/fish-shell/fish-shell.git $SOURCE_DIR/fish-shell
 pushd $SOURCE_DIR/fish-shell
 cmake . -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 make -j; make install
