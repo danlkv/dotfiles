@@ -33,9 +33,9 @@ if ! command -v cmake > /dev/null; then
     exit 1
 fi
 
-# Also required:
-# - ncurses (how to check?)
-# -
+# Optional dependencies
+# - ncurses-dev (how to check?)
+# - pcre2-dev (how to check?)
 #
 
 # -- Install
@@ -57,11 +57,15 @@ git clone https://github.com/fish-shell/fish-shell.git $SOURCE_DIR/fish-shell
 #
 pushd $SOURCE_DIR/fish-shell
 git checkout 3.7.1
-cmake . -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
+cmake . -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX || {
+    echo "!Failed to configure fish shell"
+    exit 1
+}
 make -j; make install
 if [ $? -ne 0 ]; then
     echo "!Failed to install fish shell"
     exit 1
 fi
 
+PATH=$INSTALL_PREFIX/bin:$PATH
 echo "Fish shell is installed at: $(command -v fish)"
