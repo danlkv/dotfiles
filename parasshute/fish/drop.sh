@@ -9,6 +9,7 @@ test -z "$fish_path" || {
 }
 
 # Check that $SOURCE_DIR and $INSTALL_PREFIX are set
+# -- Prepare
 
 if [ -z "$SOURCE_DIR" ]; then
     echo "SOURCE_DIR is not set"
@@ -32,6 +33,12 @@ if ! command -v cmake > /dev/null; then
     exit 1
 fi
 
+# Also required:
+# - ncurses (how to check?)
+# -
+#
+
+# -- Install
 echo "Downloading fish source into SOURCE_DIR: $SOURCE_DIR"
 echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 
@@ -52,5 +59,9 @@ pushd $SOURCE_DIR/fish-shell
 git checkout 3.7.1
 cmake . -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 make -j; make install
+if [ $? -ne 0 ]; then
+    echo "!Failed to install fish shell"
+    exit 1
+fi
 
 echo "Fish shell is installed at: $(command -v fish)"
