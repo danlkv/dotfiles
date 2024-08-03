@@ -65,9 +65,21 @@ function install_from_distribution() {
     mkdir -p $INSTALL_PREFIX/bin
     ln -s $PWD/nvim-linux64/bin/* $INSTALL_PREFIX/bin
     popd
+    nvim --version || { return 1 }
 }
 
 if $nvim_install_from_source; then
+    install_from_source 
+else
+    # NOTE: will try to install from distribution,
+    #   but if it fails, will fallback to source
+    #
+    install_from_distribution || {
+        echo "!Failed to install from binary distribution"
+        echo "Try to install from source"
+        install_from_source
+    }
+fi
 
 else
 fi
