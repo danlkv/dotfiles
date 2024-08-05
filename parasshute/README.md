@@ -8,10 +8,18 @@ your tools from git.
 
 See also:
 
-- [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) - can install packages
-  without root access. Quite hackable and more mature, supports
-  versions. Not tested, may be portable; not as hackable as bash.
-  Plus, `parasshute` allows to specify highly specific plugins like `fish-tide`.
+1. [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) - can install packages
+   without root access. Quite hackable and more mature, supports
+   versions. Not tested, may be portable; not as hackable as bash.
+   Plus, `parasshute` allows to specify highly specific plugins like `fish-tide`.
+2. [qpkg](https://nullprogram.com/blog/2018/03/27/) - build and install C packages 
+   from source dir.
+
+   Pros:
+   - Has automatic support for uninstall and check for file collisions.
+
+   Cons:
+   - Won't work for custom plugins like `fish-tide`.
 
 ## Usage
 
@@ -27,6 +35,11 @@ See also:
     ./drop.sh <tool or shortcut>
     ```
 
+3. Remove a tool
+    
+     ```bash
+    ./purge.sh -r <tool or shortcut>
+    ```
 
 ### Shortcuts
 

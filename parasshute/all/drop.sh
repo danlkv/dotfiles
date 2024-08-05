@@ -3,6 +3,6 @@
 
 echo $PWD
 # Iterate over all directories except "all"
-for dir in $(ls -d */ | grep -v "all/"); do
-    $dir/drop.sh
+for file in $(ls */drop.sh | grep -v "all/"); do
+    $file
 done
