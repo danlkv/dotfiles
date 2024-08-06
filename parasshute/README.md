@@ -57,3 +57,10 @@ These may be helpful to check
 ## Dev notes
 
 - terminate bodies of single-line functions with semicolon
+
+### Ideas
+
+Nested structure.
+
+- `nvim` - neovim binary
+- `nvim/config` - my nvim config
