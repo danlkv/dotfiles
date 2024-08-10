@@ -39,13 +39,13 @@ require("mason-lspconfig").setup({
     },
     ensure_installed = {
         "lua_ls",
-        "cssls",
-        "jsonls",
-        "pyright",
-        "tsserver",
-        "eslint",
-        "html",
-        "svelte",
+        --"cssls",
+        --"jsonls",
+        --"pyright",
+        --"tsserver",
+        --"eslint",
+        --"html",
+        --"svelte",
         "rust_analyzer",
     },
 })
@@ -53,6 +53,7 @@ require("mason-lspconfig").setup({
 require 'lsp_signature'.setup {
    hint_prefix = ' '
 }
+require('user.plugin_config.languages')
 
 -- Folding
 
