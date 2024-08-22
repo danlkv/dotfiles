@@ -39,8 +39,10 @@ require 'telescope'.setup {
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.keymap.set('n', '<c-n>', ':NvimTreeToggle<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', "<C-b>", ":NvimTreeFindFile<cr>", { silent = true, noremap = true })
+--vim.keymap.set('n', '<c-n>', ':NvimTreeToggle<cr>', { silent = true, noremap = true })
+--vim.keymap.set('n', "<C-b>", ":NvimTreeFindFile<cr>", { silent = true, noremap = true })
+vim.keymap.set('n', '<c-n>', ':Neotree toggle<cr>', { silent = true, noremap = true })
+vim.keymap.set('n', "<C-b>", ":Neotree %:p:h:h %:p<cr>", { silent = true, noremap = true })
 
 local function nvim_tree_attach(bufnr)
     local api = require 'nvim-tree.api'
@@ -91,15 +93,15 @@ local function nvim_tree_attach(bufnr)
 end
 
 -- OR setup with some options
-local nvim_tree = require 'nvim-tree'
-nvim_tree.setup({
-    sort = {
-        sorter = "case_sensitive",
-    },
-    on_attach = nvim_tree_attach,
-    view = {
-        width = 30,
-    },
-    renderer = { group_empty = true, },
-    filters = { dotfiles = false, },
-})
+--local nvim_tree = require 'nvim-tree'
+--nvim_tree.setup({
+--   sort = {
+--       sorter = "case_sensitive",
+--   },
+--   on_attach = nvim_tree_attach,
+--   view = {
+--       width = 30,
+--   },
+--   renderer = { group_empty = true, },
+--   filters = { dotfiles = false, },
+--})

@@ -15,7 +15,16 @@ require("lazy").setup({
     { import = 'user.plugin_config.colors' },
 
     -- Navigation
-    "nvim-tree/nvim-tree.lua",
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+        }
+    },
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.5',
@@ -36,7 +45,12 @@ require("lazy").setup({
         ft = "lua",
     },
     {
+        event = { "VeryLazy" },
+        'hrsh7th/nvim-cmp',
+    },
+    {
         'hrsh7th/cmp-nvim-lsp',
+        event = { "VeryLazy" },
         opts = function(_, opts)
             opts.sources = opts.sources or {}
             table.insert(opts.sources, {
