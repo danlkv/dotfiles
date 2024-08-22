@@ -51,7 +51,7 @@ require("mason-lspconfig").setup({
 })
 
 require 'lsp_signature'.setup {
-   hint_prefix = ' '
+    hint_prefix = ' '
 }
 require('user.plugin_config.languages')
 
@@ -81,7 +81,8 @@ vim.o.updatetime = 500
 -- Option 2: nvim lsp as LSP client
 -- Tell the server the capability of foldingRange,
 -- Neovim hasn't added foldingRange to default capabilities, users must add it manually
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+--local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
     lineFoldingOnly = true

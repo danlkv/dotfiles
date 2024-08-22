@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
         "git",
@@ -23,7 +24,16 @@ require("lazy").setup({
             "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
             "MunifTanjim/nui.nvim",
             -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-        }
+        },
+        event = {
+            "VeryLazy",
+        },
+        keys = {
+            { "<c-n>", "<cmd>Neotree toggle<cr>", desc = "Neotree" },
+        },
+        opts = {
+            auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
+        },
     },
     {
         'nvim-telescope/telescope.nvim',
@@ -45,19 +55,41 @@ require("lazy").setup({
         ft = "lua",
     },
     {
-        event = { "VeryLazy" },
+        event = { "InsertEnter" },
         'hrsh7th/nvim-cmp',
-    },
-    {
-        'hrsh7th/cmp-nvim-lsp',
-        event = { "VeryLazy" },
-        opts = function(_, opts)
-            opts.sources = opts.sources or {}
-            table.insert(opts.sources, {
-                name = "lazydev",
-                group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+        dependencies = {
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-nvim-lsp",
+        },
+        config = function()
+            local cmp = require 'cmp'
+            cmp.setup({
+                sources = {
+                    { name = "lazydev" },
+                    { name = "nvim_lsp" },
+                    { name = "buffer" },
+                    { name = "path" },
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+                    -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings
+                    ["<CR>"] = cmp.mapping({
+                        i = function(fallback)
+                            if cmp.visible() and cmp.get_active_entry() then
+                                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+                            else
+                                fallback()
+                            end
+                        end,
+                        s = cmp.mapping.confirm({ select = true }),
+                        c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+                    }),
+
+                })
+
             })
-        end,
+        end
     },
     -- #
     {

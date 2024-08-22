@@ -123,6 +123,7 @@ return {
     {
         "RRethy/vim-illuminate",
 
+        event = { "VeryLazy" },
         config = function(_, opts)
             require('illuminate').configure({
                 -- providers: provider used to get references in the buffer, ordered by priority

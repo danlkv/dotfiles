@@ -2,13 +2,15 @@
 return {
     {
         "NeogitOrg/neogit",
-        event = "VeryLazy",
+        --event = "VeryLazy",
+        keys = { "gs" },
+        event = { "CmdlineEnter" },
         dependencies = {
             "nvim-lua/plenary.nvim",         -- required
             "sindrets/diffview.nvim",        -- optional - Diff integration
             "nvim-telescope/telescope.nvim", -- optional
         },
-        init = function()
+        config = function()
             local neogit = require 'neogit'
             neogit.setup {}
             vim.keymap.set('n', '<leader>gs', function() neogit.open({ kind = "split" }) end)
@@ -72,8 +74,4 @@ return {
 
     },
 
-    -- Python
-    {
-        'psf/black'
-    },
 }

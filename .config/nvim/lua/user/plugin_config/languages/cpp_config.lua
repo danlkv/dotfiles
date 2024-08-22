@@ -3,9 +3,7 @@
 mason_registry = require 'mason-registry'
 
 packages = {
-    --"ruff",
-    pyright,
-    black,
+    "clangd",
 }
 -- Install all packages
 for _, pkg in ipairs(packages) do
@@ -15,3 +13,5 @@ for _, pkg in ipairs(packages) do
         pkg:install()
     end
 end
+
+require('lspconfig').clangd.setup {}
