@@ -94,4 +94,12 @@ for _, ls in ipairs(language_servers) do
         -- you can add other fields for setting up lsp server in this table
     })
 end
+
+require('lspconfig').clangd.setup({
+    name = "clangd",
+    cmd = { "clangd", "--query-driver=/usr/bin/g++" },
+    initialization_options = {
+        fallback_flags = { '-std=c++17' },
+    }
+})
 --require('ufo').setup()

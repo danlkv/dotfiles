@@ -30,6 +30,21 @@ require 'telescope'.setup {
                 ["<C-w>"] = telescope_actions.close,
             }
         },
+    },
+    extensions = {
+        cmdline = {
+            picker   = {
+                layout_config = {
+                    width  = 120,
+                    height = 25,
+                }
+            },
+            mappings = {
+                complete      = '<Tab>',
+                run_selection = '<C-CR>',
+                run_input     = '<CR>',
+            },
+        },
     }
 }
 
