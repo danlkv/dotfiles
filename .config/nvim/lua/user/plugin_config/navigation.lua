@@ -30,6 +30,7 @@ require 'telescope'.setup {
                 ["<C-w>"] = telescope_actions.close,
             }
         },
+        winblend = 30,
     },
     extensions = {
         cmdline = {
