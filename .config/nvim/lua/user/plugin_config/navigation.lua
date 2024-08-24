@@ -27,7 +27,8 @@ require 'telescope'.setup {
             i = {
                 ["<C-j>"] = telescope_actions.move_selection_next,
                 ["<C-k>"] = telescope_actions.move_selection_previous,
-                ["<C-w>"] = telescope_actions.close,
+                -- Conflicts with "delete word"
+                -- ["<C-w>"] = telescope_actions.close,
             }
         },
         winblend = 30,
