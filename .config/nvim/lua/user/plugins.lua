@@ -61,8 +61,8 @@ require("lazy").setup({
         }
     },
     {
-            "nvim-telescope/telescope-file-browser.nvim",
-            dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
     },
 
 
@@ -78,6 +78,7 @@ require("lazy").setup({
     {
         "folke/lazydev.nvim",
         ft = "lua",
+        opts = {}
     },
     {
         event = { "InsertEnter" },
@@ -87,11 +88,11 @@ require("lazy").setup({
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lsp",
         },
-        config = function()
+        opts = function(_, opts)
             local cmp = require 'cmp'
-            cmp.setup({
+            return {
                 sources = {
-                    { name = "lazydev" },
+                    { name = "lazydev", group_index = 0 },
                     { name = "nvim_lsp" },
                     { name = "buffer" },
                     { name = "path" },
@@ -99,6 +100,7 @@ require("lazy").setup({
                 mapping = cmp.mapping.preset.insert({
                     ['<Tab>'] = cmp.mapping.confirm({ select = true }),
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings
+                    -- <CR> accepts only if there is an active entry
                     ["<CR>"] = cmp.mapping({
                         i = function(fallback)
                             if cmp.visible() and cmp.get_active_entry() then
@@ -110,10 +112,8 @@ require("lazy").setup({
                         s = cmp.mapping.confirm({ select = true }),
                         c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
                     }),
-
                 })
-
-            })
+            }
         end
     },
     -- #
@@ -146,7 +146,9 @@ require("lazy").setup({
         config = function()
             require("peek").setup({
                 -- Provide your location to the browser
-                app = "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+                --   print('load')
+                app = "google chrome"
+                --app = "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
                 --app = "/mnt/c/Program Files/Mozilla Firefox/firefox.exe",
             })
             vim.api.nvim_create_user_command("MarkdownOpen", require("peek").open, {})
@@ -187,7 +189,7 @@ require("lazy").setup({
             workspaces = {
                 {
                     name = "personal",
-                    path = "/mnt/h/My Drive/Notes/",
+                    path = "/Users/dlykov/Library/CloudStorage/GoogleDrive-dlykov@nvidia.com",
                 },
             },
 
