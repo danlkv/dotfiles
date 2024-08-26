@@ -43,6 +43,9 @@ require("lazy").setup({
                     ["H"] = "navigate_up",
                     ["<C-x>"] = "open_split",
                     ["s"] = "open_vsplit",
+                    ["I"] = "toggle_hidden",
+                    -- the fuzzy-finder is redundant, there is Telescope
+                    ["/"] = "noop",
                 },
             },
 
