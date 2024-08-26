@@ -53,7 +53,7 @@ require("lazy").setup({
         tag = '0.1.5',
         event = "VeryLazy",
         keys = {
-            { ':', '<cmd>Telescope cmdline<cr>', desc = 'Cmdline' }
+            { '<c-P>', '<cmd>Telescope cmdline<cr>', desc = 'Cmdline' }
         },
         dependencies = {
             'nvim-lua/plenary.nvim',
