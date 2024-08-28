@@ -23,21 +23,27 @@ require("lazy").setup({
             "nvim-lua/plenary.nvim",
             "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
             "MunifTanjim/nui.nvim",
+            "s1n7ax/nvim-window-picker",
             -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
         },
         event = {
             "VeryLazy",
         },
         keys = {
-            { "<c-n>", "<cmd>Neotree toggle<cr>", desc = "Neotree" },
+            { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
+            { "<c-i>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
+            { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
         },
         opts = {
             auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
             window = {
                 width = 45,
                 side = "left",
+                -- :help neo-tree-mappings
                 mappings = {
                     ["<CR>"] = "open",
+                    ["<C-CR>"] = "open_with_window_picker",
+                    ["."] = "set_root",
                     ["l"] = "open",
                     ["h"] = "close_node",
                     ["H"] = "navigate_up",
@@ -46,6 +52,7 @@ require("lazy").setup({
                     ["I"] = "toggle_hidden",
                     -- the fuzzy-finder is redundant, there is Telescope
                     ["/"] = "noop",
+                    ["P"] = { "toggle_preview", config = { use_float = false, use_image_nvim = true } },
                 },
             },
 
