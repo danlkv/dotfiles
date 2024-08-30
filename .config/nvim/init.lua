@@ -46,7 +46,5 @@ vim.api.nvim_create_autocmd('BufRead', {
 })
 
 require 'user'
-if vim.g.neovide then
-    require 'neovide'
-end
+require 'neovide'
 require 'my_modules.transparent'
