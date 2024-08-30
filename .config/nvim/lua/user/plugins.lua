@@ -31,7 +31,8 @@ require("lazy").setup({
         },
         keys = {
             { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
-            { "<m-n>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
+            -- To trigger standard vim "go to next location", use <ctrl-shift-i>
+            { "<c-i>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
             { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
         },
         opts = {
