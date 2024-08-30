@@ -25,6 +25,14 @@ vim.keymap.set('n', '<c-k>', ":Telescope file_browser<cr>", {})
 local telescope_actions = require('telescope.actions')
 require 'telescope'.setup {
     defaults = {
+        -- :help telescope.defaults.file_ignore_patterns*
+        -- Note: will also ignore *any* results (including lsp)
+        -- Rationale: I don't want to always ignore .gitignore files.
+        --      Sometimes I want to view ignored files, such as lock/env files.
+        file_ignore_patterns = {
+            "node_modules/.*",
+            ".git/.*",
+        },
         mappings = {
             i = {
                 ["<C-j>"] = telescope_actions.move_selection_next,
