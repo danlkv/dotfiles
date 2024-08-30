@@ -36,7 +36,7 @@ wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1
 tar -xvf ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz || { echo "!Failed to extract"; exit 1; }
 
 mkdir -p $INSTALL_PREFIX/bin
-ln -s $PWD/ripgrep-14.1.0-x86_64-unknown-linux-musl/bin/* $INSTALL_PREFIX/bin
+ln -s $PWD/ripgrep-14.1.0-x86_64-unknown-linux-musl/rg $INSTALL_PREFIX/bin/rg
 popd
 
 echo "RipGrep version:"
