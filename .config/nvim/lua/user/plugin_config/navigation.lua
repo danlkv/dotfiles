@@ -17,7 +17,7 @@ vim.keymap.set('n', '<leader>tc', telescope_builtin.command_history, {})
 ---- Telescope lsp jumps
 vim.keymap.set('n', '<leader>tr', telescope_builtin.lsp_references)
 vim.keymap.set('n', '<leader>ts', telescope_builtin.lsp_document_symbols)
-vim.keymap.set('n', '<c-t>', function() telescope_builtin.find_files({ hidden = true }) end, {})
+vim.keymap.set('n', '<c-t>', function() telescope_builtin.find_files({ hidden = true, no_ignore=true}) end, {})
 vim.keymap.set('n', '<c-j>', telescope_builtin.lsp_document_symbols, {})
 vim.keymap.set('n', '<c-k>', ":Telescope file_browser<cr>", {})
 
@@ -32,6 +32,7 @@ require 'telescope'.setup {
         file_ignore_patterns = {
             "node_modules/.*",
             ".git/.*",
+            ".gitlab/.*",
         },
         mappings = {
             i = {
