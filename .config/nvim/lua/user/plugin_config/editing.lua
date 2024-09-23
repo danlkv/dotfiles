@@ -8,7 +8,7 @@ lsp_zero.on_attach(function(client, bufnr)
     -- see :help lsp-zero-keybindings
     -- to learn the available actions
     lsp_zero.default_keymaps({ buffer = bufnr })
-    lsp_zero.buffer_autoformat()
+    --lsp_zero.buffer_autoformat()
 
     -- Svelte
     -- https://github.com/sveltejs/language-tools/issues/2008
@@ -57,10 +57,10 @@ require('user.plugin_config.languages')
 
 -- Folding
 
-vim.o.foldcolumn = '1' -- '0' is not bad
-vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+--vim.o.foldcolumn = '1' -- '0' is not bad
+--vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
+--vim.o.foldlevelstart = 99
+--vim.o.foldenable = true
 -- Auto-open float using built-in Lua API
 vim.api.nvim_create_autocmd("CursorHold", {
     callback = function()
@@ -97,9 +97,11 @@ end
 
 require('lspconfig').clangd.setup({
     name = "clangd",
-    cmd = { "clangd", "--query-driver=/usr/bin/g++" },
+    cmd = { "clangd",
+        --"--log=verbose",
+        "--query-driver=/usr/bin/g++" },
     initialization_options = {
-        fallback_flags = { '-std=c++17' },
+        fallback_flags = { '-std=c++20' },
     }
 })
 --require('ufo').setup()
