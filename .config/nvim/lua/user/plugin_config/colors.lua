@@ -31,7 +31,7 @@ function Colors_override_fn(name)
         end
     elseif vim.o.background == 'dark' then
         -- Dark
-        vim.api.nvim_set_hl(0, 'Normal', { bg = "#020306", fg = "#ecf1c1" })
+        -- vim.api.nvim_set_hl(0, 'Normal', { bg = "#020306", fg = "#ecf1c1" })
 
         vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#2f552f" })
         vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#552f2f" })
@@ -86,6 +86,7 @@ return {
     -- Current colorscheme.
     colorscheme_config,
 
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     -- Autocomplete menu
     -- (size defined in editing.lua)
     {

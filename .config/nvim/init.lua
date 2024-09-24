@@ -10,9 +10,15 @@ vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 
+-- Folding
+
+vim.o.foldmethod = "syntax"
+vim.o.foldlevelstart = 1
+vim.o.foldenable = true
 -- vim.cmd 'set formatoptions+=a'
 
 vim.keymap.set('n', '<c-s>', ':update<cr>', { silent = true })
+vim.keymap.set('n', '<leader>s', vim.lsp.buf.format, { silent = true })
 vim.keymap.set('n', '<leader>q', ':wq<cr>', { silent = true })
 -- System clipboard
 --- Copy
@@ -46,8 +52,6 @@ vim.api.nvim_create_autocmd('BufRead', {
 })
 
 require 'user'
-if vim.g.neovide then
-    require 'neovide'
-end
+require 'neovide'
 require 'my_modules.transparent'
 require 'my_modules.colors'

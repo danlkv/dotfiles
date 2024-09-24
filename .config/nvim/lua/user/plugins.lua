@@ -31,6 +31,7 @@ require("lazy").setup({
         },
         keys = {
             { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
+            -- To trigger standard vim "go to next location", use <ctrl-shift-i>
             { "<c-i>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
             { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
         },
@@ -158,8 +159,8 @@ require("lazy").setup({
             require("peek").setup({
                 -- Provide your location to the browser
                 --   print('load')
-                app = "google chrome"
-                --app = "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+                --app = "google chrome"
+                app = "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
                 --app = "/mnt/c/Program Files/Mozilla Firefox/firefox.exe",
             })
             vim.api.nvim_create_user_command("MarkdownOpen", require("peek").open, {})
@@ -200,7 +201,8 @@ require("lazy").setup({
             workspaces = {
                 {
                     name = "personal",
-                    path = "/Users/dlykov/Library/CloudStorage/GoogleDrive-dlykov@nvidia.com",
+                    --path = "/Users/dlykov/Library/CloudStorage/GoogleDrive-dlykov@nvidia.com",
+                    path = "/mnt/h/My Drive/Notes",
                 },
             },
 
