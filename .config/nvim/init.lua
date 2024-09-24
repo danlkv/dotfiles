@@ -50,3 +50,4 @@ if vim.g.neovide then
     require 'neovide'
 end
 require 'my_modules.transparent'
+require 'my_modules.colors'
