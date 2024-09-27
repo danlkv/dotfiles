@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# DEPEND: fisher
-./drop.sh fish || exit 1
+# DEPEND: fish-fzf
+./drop.sh fish-fzf || exit 1
 export PATH=$INSTALL_PREFIX/bin:$PATH
 
 config_src=$PWD/../.config/fish/config.fish
