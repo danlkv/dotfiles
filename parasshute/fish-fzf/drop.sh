@@ -8,5 +8,26 @@ if [ -n "$version" ]; then
     echo "FZF is already installed"
     exit 0
 fi
+
+# -- Install fzf
+if [ -z "$SOURCE_DIR" ]; then
+    echo "SOURCE_DIR is not set"
+    exit 1
+fi
+
+if [ -z "$INSTALL_PREFIX" ]; then
+    echo "INSTALL_PREFIX is not set"
+    exit 1
+fi
+echo "Downloading neovim source into SOURCE_DIR: $SOURCE_DIR"
+echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
+
+
+git clone --depth 1 https://github.com/junegunn/fzf.git $SOURCE_DIR/fzf
+ln -s $SOURCE_DIR/fzf/bin/fzf $INSTALL_PREFIX/bin
+fzf --version || { return 1; }
+
+# -- Install fish plugin
+
 cmd="fisher install patrickf1/fzf.fish"
 fish -c "$cmd" || exit 1

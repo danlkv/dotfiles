@@ -23,5 +23,5 @@ if [ -e "$config_file" ]; then
 fi
 
 ln -s $config_src $config_file
-fish
 echo "Config installed."
+
