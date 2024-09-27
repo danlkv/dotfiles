@@ -24,6 +24,8 @@ echo "Prefix is INSTALL_PREFIX: $INSTALL_PREFIX"
 
 
 git clone --depth 1 https://github.com/junegunn/fzf.git $SOURCE_DIR/fzf
+pushd $SOURCE_DIR/fzf
+./install --bin
 ln -s $SOURCE_DIR/fzf/bin/fzf $INSTALL_PREFIX/bin
 fzf --version || { return 1; }
 
@@ -31,3 +33,4 @@ fzf --version || { return 1; }
 
 cmd="fisher install patrickf1/fzf.fish"
 fish -c "$cmd" || exit 1
+fish -c "set -Ux FZF_DEFAULT_OPTS --height=30%" || exit 1
