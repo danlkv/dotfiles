@@ -4,7 +4,7 @@ export SOURCE_DIR=$HOME/git-build/
 export INSTALL_PREFIX=$HOME/.local/
 
 echo "Available to install:"
-find -name drop.sh | sed 's|/drop.sh||g' | sort
+find . -name drop.sh | sed 's|/drop.sh||g' | sort
 
 # Check if argument is passed
 # If not, exit
