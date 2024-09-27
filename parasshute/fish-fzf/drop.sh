@@ -8,5 +8,5 @@ if [ -n "$version" ]; then
     echo "FZF is already installed"
     exit 0
 fi
-cmd="fisher install /patrickf1/fzf.fish"
+cmd="fisher install patrickf1/fzf.fish"
 fish -c "$cmd" || exit 1
