@@ -9,13 +9,20 @@ vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
+vim.o.virtualedit = "block"
 
--- Folding
-
-vim.o.foldmethod = "syntax"
+-- Folding (see https://www.jackfranklin.co.uk/blog/code-folding-in-vim-neovim/)
+vim.o.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldtext = ""
+vim.opt.foldnestmax = 4
 vim.o.foldlevelstart = 1
 vim.o.foldenable = true
 -- vim.cmd 'set formatoptions+=a'
+
+-- Search
+vim.o.inccommand = "split"
+vim.o.ignorecase = true
 
 vim.keymap.set('n', '<c-s>', ':update<cr>', { silent = true })
 vim.keymap.set('n', '<leader>s', vim.lsp.buf.format, { silent = true })
