@@ -29,7 +29,7 @@ mkdir -p $SOURCE_DIR
 pushd $SOURCE_DIR
 
 archive=https://github.com/bcpierce00/unison/releases/download/v2.53.5/unison-2.53.5-ubuntu-x86_64-static.tar.gz
-wget archive || {
+wget $archive || {
     echo "!Failed to download unison archive"
     exit 1
 }
