@@ -41,4 +41,4 @@ ln -s $PWD/unison-2.53.5/bin/* $INSTALL_PREFIX/bin/
 popd
 
 echo "Unison version:"
-unison --version || { return 1; }
+unison -version || { return 1; }
