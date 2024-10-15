@@ -69,7 +69,7 @@ return {
             vim.keymap.set("n", "<leader>tn", function() neotest.run.run(vim.fn.expand("%")) end)
             vim.keymap.set("n", "<leader>to", function() neotest.output_panel.open() end)
             vim.keymap.set("n", "<leader>tw", function() neotest.watch.toggle(vim.fn.expand("%")) end)
-            vim.keymap.set("n", "<leader>tv", function() neotest.summary.open() end)
+            vim.keymap.set("n", "<leader>tv", function() neotest.summary.toggle() end)
         end
 
     },
