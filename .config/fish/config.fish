@@ -10,10 +10,14 @@ alias tmux="tmux -2"
 alias clip="xclip -selection 'clipboard'"
 # -- C-s acts as "accept suggestion"
 bind -s --preset -M default \cs end-of-line
-bind -s --preset -M default \ce end-of-line
-bind \cs end-of-line
 bind -s --preset -M insert \cs end-of-line 
+# -- C-e acts as "accept suggestion"
 bind -s --preset -M default \ce end-of-line
+bind -s --preset -M insert \ce end-of-line
+bind \cs end-of-line
+# -- C-a acts as "Go to first character" (emacs,bash)
+bind -s --preset -M default \ca beginning-of-line
+bind -s --preset -M insert \ca beginning-of-line
 
 # -- Vim keybindings
 fish_vi_key_bindings
