@@ -27,9 +27,14 @@ if status is-interactive
 
     # -- Check if fzf is installed
     if functions -q fzf_configure_bindings
+        # -- Configure fzf
+        export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+
         bind -M insert \cP _fzf_search_history
+        bind -M default \cP _fzf_search_history
     else
         bind -M insert \cP up-or-search
+        bind -M default \cP up-or-search
     end
 
     bind -M insert \cE end-of-line
