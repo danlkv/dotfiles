@@ -51,6 +51,7 @@ require("lazy").setup({
                     ["<C-x>"] = "open_split",
                     ["s"] = "open_vsplit",
                     ["I"] = "toggle_hidden",
+                    ["z"] = "noop",
                     -- the fuzzy-finder is redundant, there is Telescope
                     ["/"] = "noop",
                     ["P"] = { "toggle_preview", config = { use_float = false, use_image_nvim = true } },

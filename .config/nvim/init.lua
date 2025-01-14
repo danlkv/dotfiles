@@ -10,6 +10,7 @@ vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 vim.o.virtualedit = "block"
+vim.opt.linebreak = true
 
 -- Folding (see https://www.jackfranklin.co.uk/blog/code-folding-in-vim-neovim/)
 vim.o.foldmethod = "expr"

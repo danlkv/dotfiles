@@ -21,7 +21,7 @@ vim.g.neovide_floating_blur_amount_y = 5.0
 
 
 -- Font settings
-vim.opt.guifont = "Iosevka Curly Slab:h12"
+vim.opt.guifont = "Iosevka Curly Slab:h11:w0.3"
 vim.opt.linespace = 2
 
 -- Scaling adjustment keybindings

@@ -11,10 +11,14 @@ alias tmux="tmux -2"
 alias clip="xclip -selection 'clipboard'"
 # -- C-s acts as "accept suggestion"
 bind -s --preset -M default \cs end-of-line
-bind -s --preset -M default \ce end-of-line
-bind \cs end-of-line
 bind -s --preset -M insert \cs end-of-line 
+# -- C-e acts as "accept suggestion"
 bind -s --preset -M default \ce end-of-line
+bind -s --preset -M insert \ce end-of-line
+bind \cs end-of-line
+# -- C-a acts as "Go to first character" (emacs,bash)
+bind -s --preset -M default \ca beginning-of-line
+bind -s --preset -M insert \ca beginning-of-line
 
 # -- Vim keybindings
 fish_vi_key_bindings
@@ -24,9 +28,14 @@ if status is-interactive
 
     # -- Check if fzf is installed
     if functions -q fzf_configure_bindings
+        # -- Configure fzf
+        export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+
         bind -M insert \cP _fzf_search_history
+        bind -M default \cP _fzf_search_history
     else
         bind -M insert \cP up-or-search
+        bind -M default \cP up-or-search
     end
 
     bind -M insert \cE end-of-line
