@@ -77,6 +77,12 @@ return {
       })
     end
   },
+  {
+	  'FabijanZulj/blame.nvim',
+	  opts = {
+		  blame_options = { '-w' },
+	  },
+  },
 
 
   -- Testing
