@@ -16,6 +16,12 @@ return {
             vim.keymap.set('n', '<leader>gs', function() neogit.open({ kind = "split" }) end)
         end
     },
+    {
+        'FabijanZulj/blame.nvim',
+        opts = {
+            blame_options = { '-w' },
+        },
+    },
 
     {
         "folke/trouble.nvim",
