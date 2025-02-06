@@ -65,10 +65,11 @@ return {
     end
   },
   {
-	  'FabijanZulj/blame.nvim',
-	  opts = {
-		  blame_options = { '-w' },
-	  },
+    'FabijanZulj/blame.nvim',
+    cmd = "BlameToggle",
+    opts = {
+      blame_options = { '-w' },
+    },
   },
 
 
