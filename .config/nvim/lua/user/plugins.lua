@@ -135,6 +135,10 @@ require("lazy").setup({
         opts = {},
         config = function(_, opts) require 'lsp_signature'.setup(opts) end
     },
+
+    -- {
+    --  'nmac427/guess-indent.nvim',
+    -- },
     -- Misc
 
     ---- Vim search highlighting tweak
@@ -142,6 +146,7 @@ require("lazy").setup({
     ---- Zen mode
     {
         "folke/zen-mode.nvim",
+	cmd = "ZenMode",
         opts = {
             width = 95,
             -- your configuration comes here
