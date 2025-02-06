@@ -43,6 +43,9 @@ require 'telescope'.setup {
             }
         },
         winblend = 30,
+        layout_strategy = "bottom_pane",
+        border = true,
+        sorting_strategy = "ascending",
     },
     extensions = {
         cmdline = {
