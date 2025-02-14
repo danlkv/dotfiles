@@ -16,68 +16,7 @@ require("lazy").setup({
     { import = 'user.plugin_config.colors' },
 
     -- Navigation
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-            "MunifTanjim/nui.nvim",
-            "s1n7ax/nvim-window-picker",
-            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-        },
-        event = {
-            "VeryLazy",
-        },
-        keys = {
-            { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
-            -- To trigger standard vim "go to next location", use <ctrl-shift-i>
-            { "<c-i>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
-            { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
-        },
-        opts = {
-            auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
-            window = {
-                width = 45,
-                side = "left",
-                -- :help neo-tree-mappings
-                mappings = {
-                    ["<CR>"] = "open",
-                    ["<C-CR>"] = "open_with_window_picker",
-                    ["."] = "set_root",
-                    ["l"] = "open",
-                    ["h"] = "close_node",
-                    ["H"] = "navigate_up",
-                    ["<C-x>"] = "open_split",
-                    ["s"] = "open_vsplit",
-                    ["I"] = "toggle_hidden",
-                    ["z"] = "noop",
-                    -- the fuzzy-finder is redundant, there is Telescope
-                    ["/"] = "noop",
-                    ["P"] = { "toggle_preview", config = { use_float = false, use_image_nvim = true } },
-                },
-            },
-
-        },
-    },
-
-    {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.5',
-        event = "VeryLazy",
-        keys = {
-            { '<c-P>', '<cmd>Telescope cmdline<cr>', desc = 'Cmdline' }
-        },
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'jonarrien/telescope-cmdline.nvim',
-        }
-    },
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-    },
-
+    { import = 'user.plugin_config.navigation' },
 
     -- Editing
     --- Uncomment the two plugins below if you want to manage the language servers from neovim
@@ -85,7 +24,7 @@ require("lazy").setup({
     { 'williamboman/mason-lspconfig.nvim' },
     { 'VonHeikemen/lsp-zero.nvim',         branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
-    { 'github/copilot.vim' },
+    { 'github/copilot.vim', enabled = false},
     -- {'L3MON4D3/LuaSnip'},
     --- Editing lua configuration files
     {

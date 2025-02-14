@@ -17,6 +17,28 @@ return {
     end
   },
 
+  { -- Requires `silicon` to be installed
+    "krivahtoo/silicon.nvim",
+    build = "./install.sh",
+    cmd = { "Silicon" },
+    opts = {
+      -- silicon --list-fonts
+      font = "JetBrains Mono=21",
+      -- silicon --list-themes
+      theme = "Solarized (light)",
+      background = "#fff",
+      line_pad = 1,
+      pad_horiz = 20,
+      pad_vert = 15,
+      gobble = true,
+      window_controls = false,
+      output = {
+        clipboard = false,
+        path = "/home/danlkv/Screenshots"
+      },
+    },
+  },
+
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },

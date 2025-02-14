@@ -1,11 +1,12 @@
 -- Colorscheme config
 --
 --- Change this id
-Colorscheme_id = 2
+Colorscheme_id = 3
 
 Colorscheme_names = {
     [1] = { 'flexoki', 'Paper-like white minimalistic' },
     [2] = { 'melange', 'Warm chocolate wood' },
+    [3] = { 'rose-pine', 'Rosy' },
     -- Add new theme here, don't forget the config
 }
 --- Whether to apply the overrides
@@ -15,12 +16,19 @@ function Colors_override_fn(name)
     if not Colorscheme_override then
         return
     end
+    local override_background = false
     -- Light
     if vim.o.background == 'light' then
-        vim.api.nvim_set_hl(0, 'Normal', { bg = "#fcf5f3", fg = "#1d2023" })
-        vim.cmd 'highlight! BorderBG guibg=None guifg=#706560'
-        vim.api.nvim_set_hl(0, 'Number', { bg = "#feeae5", fg = '#3d4543' })
-        vim.api.nvim_set_hl(0, 'Comment', { bg = "#fef2da", fg = "#444f24" })
+        if override_background then
+            vim.api.nvim_set_hl(0, 'Normal', { bg = "#fcf5f3", fg = "#1d2023" })
+            vim.cmd 'highlight! BorderBG guibg=None guifg=#706560'
+            vim.api.nvim_set_hl(0, 'Number', { bg = "#feeae5", fg = '#3d4543' })
+            vim.api.nvim_set_hl(0, 'Comment', { bg = "#fef2da", fg = "#444f24" })
+
+            vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#2f552f" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#552f2f" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#555125" })
+        end
 
         if name == 'flexoki' then
             vim.api.nvim_set_hl(0, 'CursorLine', { bg = "#feebe6" })
@@ -31,7 +39,9 @@ function Colors_override_fn(name)
         end
     elseif vim.o.background == 'dark' then
         -- Dark
-        -- vim.api.nvim_set_hl(0, 'Normal', { bg = "#020306", fg = "#ecf1c1" })
+        if override_background then
+            vim.api.nvim_set_hl(0, 'Normal', { bg = "#020306", fg = "#ecf1c1" })
+        end
 
         vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#2f552f" })
         vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#552f2f" })
@@ -43,6 +53,15 @@ local colorscheme_name = Colorscheme_names[Colorscheme_id][1]
 vim.api.nvim_create_autocmd('ColorScheme', {
     pattern = '*',
     callback = function() Colors_override_fn(colorscheme_name) end
+})
+
+-- set colorscheme
+vim.api.nvim_create_autocmd('VimEnter', {
+    pattern = '*',
+    callback = function()
+        vim.cmd.colorscheme(colorscheme_name)
+        Colors_override_fn(colorscheme_name)
+    end
 })
 
 
@@ -57,15 +76,19 @@ local colorscheme_configs = {
 
     melange = {
         "savq/melange-nvim",
-        config = function(_, opts)
-            vim.cmd.colorscheme 'melange'
-        end
+    },
+
+   ['rose-pine'] = {
+        "rose-pine/neovim",
+        name = "rose-pine",
     },
 
     flexoki = {
-        "kepano/flexoki-neovim",
+        -- original: "kepano/flexoki-neovim", but this supports opt.bg
+        "nuvic/flexoki-nvim",
+        name = "flexoki",
         config = function(_, opts)
-            vim.cmd('colorscheme flexoki-light')
+            require('flexoki').setup(opts)
             -- Git (Neogit)
             vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#dfeed0' })
             vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#eedfd0' })
@@ -85,7 +108,17 @@ return {
 
     -- Current colorscheme.
     colorscheme_config,
+    -- extra installs
+    colorscheme_configs['flexoki'],
+    colorscheme_configs['melange'],
+    --colorscheme_configs['rose_pine'],
 
+    {
+        "Mofiqul/vscode.nvim",
+        opts = {
+            italic_comments = true,
+        }
+    },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     -- Autocomplete menu
     -- (size defined in editing.lua)
@@ -120,11 +153,10 @@ return {
     },
 
     -- Illuminate
-    --
     {
         "RRethy/vim-illuminate",
 
-        event = { "VeryLazy" },
+        -- event = { "VeryLazy" },
         config = function(_, opts)
             require('illuminate').configure({
                 -- providers: provider used to get references in the buffer, ordered by priority
@@ -203,8 +235,8 @@ return {
             end,
         }
     },
-    {
 
+    {
         "nvim-lualine/lualine.nvim",
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         -- vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
@@ -241,58 +273,57 @@ return {
                 lualine_z = {}
             },
         }
-    }, {
+  },
 
-
-
-    -- Treesitter
-    --
+  -- Treesitter
+  --
+  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function(_, opts)
-        --setup treesitter
-        treesitter = require 'nvim-treesitter.configs'
-        treesitter.setup({
-            ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte" },
-            sync_install = false,
-            highlight = { enable = true },
-            indent = { enable = true },
-            auto_install = true,
-        })
+      --setup treesitter
+      treesitter = require 'nvim-treesitter.configs'
+      treesitter.setup({
+        ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte" },
+        sync_install = false,
+        highlight = { enable = true },
+        indent = { enable = true },
+        auto_install = true,
+      })
     end,
 
+  },
 
-}, {
-
-    -- Rainbow delimiters
-    --
+  -- Rainbow delimiters
+  --
+  {
     "hiphish/rainbow-delimiters.nvim",
     config = function(_, opts)
-        local rainbow_delimiters = require 'rainbow-delimiters'
+      local rainbow_delimiters = require 'rainbow-delimiters'
 
-        vim.g.rainbow_delimiters = {
-            strategy = {
-                [''] = rainbow_delimiters.strategy['global'],
-                vim = rainbow_delimiters.strategy['local'],
-            },
-            query = {
-                [''] = 'rainbow-delimiters',
-                lua = 'rainbow-blocks',
-            },
-            priority = {
-                [''] = 110,
-                lua = 210,
-            },
-            highlight = {
-                'RainbowDelimiterRed',
-                'RainbowDelimiterYellow',
-                'RainbowDelimiterBlue',
-                'RainbowDelimiterOrange',
-                'RainbowDelimiterGreen',
-                'RainbowDelimiterViolet',
-                'RainbowDelimiterCyan',
-            },
-        }
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [''] = rainbow_delimiters.strategy['global'],
+          vim = rainbow_delimiters.strategy['local'],
+        },
+        query = {
+          [''] = 'rainbow-delimiters',
+          lua = 'rainbow-blocks',
+        },
+        priority = {
+          [''] = 110,
+          lua = 210,
+        },
+        highlight = {
+          'RainbowDelimiterRed',
+          'RainbowDelimiterYellow',
+          'RainbowDelimiterBlue',
+          'RainbowDelimiterOrange',
+          'RainbowDelimiterGreen',
+          'RainbowDelimiterViolet',
+          'RainbowDelimiterCyan',
+        },
+      }
     end
-}
+  }
 }

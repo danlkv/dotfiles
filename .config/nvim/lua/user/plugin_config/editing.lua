@@ -1,6 +1,9 @@
 -- Autocomplete menu
 
 vim.opt.pumheight = 10
+vim.cmd "set cinoptions+=(0"
+
+
 -- LSP
 local lsp_zero = require('lsp-zero')
 
