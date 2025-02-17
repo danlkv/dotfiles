@@ -12,13 +12,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Function to get hostname
-local function get_hostname()
-  return vim.loop.os_gethostname()
-end
-
 -- Determine Obsidian workspace path based on hostname
-local hostname = get_hostname()
+local hostname = vim.loop.os_gethostname()
 local obsidian_path
 
 if hostname == "Your-Home-Hostname" then
