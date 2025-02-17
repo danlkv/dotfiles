@@ -14,15 +14,13 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Determine Obsidian workspace path based on hostname
 local hostname = vim.loop.os_gethostname()
-local obsidian_path
 
-if hostname == "Your-Home-Hostname" then
-  obsidian_path = "/path/to/home/notes"
-elseif hostname == "Your-Work-Hostname" then
-  obsidian_path = "/path/to/work/notes"
-else
-  obsidian_path = "/mnt/h/My Drive/Notes"  -- default path
-end
+local host_to_path = {
+  ["Your-Home-Hostname"] = "/path/to/home/notes",
+  ["Your-Work-Hostname"] = "/path/to/work/notes",
+}
+
+local obsidian_path = host_to_path[hostname] or "/mnt/h/My Drive/Notes"  -- default path
 
 require("lazy").setup({
   -- Colors and syntax
