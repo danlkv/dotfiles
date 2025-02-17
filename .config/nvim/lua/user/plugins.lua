@@ -11,6 +11,24 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
+-- Function to get hostname
+local function get_hostname()
+  return vim.loop.os_uname().nodename
+end
+
+-- Determine Obsidian workspace path based on hostname
+local hostname = get_hostname()
+local obsidian_path
+
+if hostname == "Your-Home-Hostname" then
+  obsidian_path = "/path/to/home/notes"
+elseif hostname == "Your-Work-Hostname" then
+  obsidian_path = "/path/to/work/notes"
+else
+  obsidian_path = "/mnt/h/My Drive/Notes"  -- default path
+end
+
 require("lazy").setup({
   -- Colors and syntax
   { import = 'user.plugin_config.colors' },
@@ -91,8 +109,7 @@ require("lazy").setup({
       workspaces = {
         {
           name = "personal",
-          --path = "/Users/dlykov/Library/CloudStorage/GoogleDrive-dlykov@nvidia.com",
-          path = "/mnt/h/My Drive/Notes",
+          path = obsidian_path,
         },
       },
 
