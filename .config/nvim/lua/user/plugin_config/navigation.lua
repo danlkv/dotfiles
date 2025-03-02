@@ -170,4 +170,14 @@ return {
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
   },
   -- < Telescope
+  {
+    "cbochs/portal.nvim",
+    -- Optional dependencies
+    cmd = { "Portal" },
+    dependencies = {
+      "cbochs/grapple.nvim",
+      --"ThePrimeagen/harpoon"
+    },
+  }
+
 }
