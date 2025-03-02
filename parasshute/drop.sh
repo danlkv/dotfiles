@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export SOURCE_DIR=$HOME/git-build/
-export INSTALL_PREFIX=$HOME/.local/
+export INSTALL_PREFIX=${INSTALL_PREFIX:-$HOME/.local/}
+export SOURCE_DIR=${SOURCE_DIR:-$INSTALL_PREFIX/sources/}
 
 echo "Available to install:"
 find . -name drop.sh | sed 's|/drop.sh||g' | sort
