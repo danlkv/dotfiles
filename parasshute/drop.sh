@@ -6,6 +6,9 @@ export SOURCE_DIR=${SOURCE_DIR:-$INSTALL_PREFIX/sources/}
 echo "Available to install:"
 find . -name drop.sh | sed 's|/drop.sh||g' | sort
 
+# Common assumptions between scripts
+mkdir -p $INSTALL_PREFIX/bin
+
 # Check if argument is passed
 # If not, exit
 # If yes, check if the argument is a directory
