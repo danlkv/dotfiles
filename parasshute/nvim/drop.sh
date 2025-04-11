@@ -71,13 +71,16 @@ function install_from_distribution() {
     echo "Downloading neovim compiled binaries archive into SOURCE_DIR: $SOURCE_DIR"
     pushd $SOURCE_DIR
     # DEPEND: wget
-    wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz || {
+    archive_name=nvim-linux-x86_64.tar.gz
+    dirname=$(basename "$archive_name" .tar.gz)
+    wget https://github.com/neovim/neovim/releases/latest/download/$archive_name || {
         echo "!Failed to download neovim"
         exit 1
     }
-    tar -xvf nvim-linux64.tar.gz || { echo "!Failed to extract"; exit 1; }
+    tar -xvf $archive_name || { echo "!Failed to extract"; exit 1; }
     mkdir -p $INSTALL_PREFIX/bin
-    ln -s $PWD/nvim-linux64/bin/* $INSTALL_PREFIX/bin
+    unlink $INSTALL_PREFIX/bin/nvim
+    ln -s $PWD/$dirname/bin/nvim $INSTALL_PREFIX/bin
     popd
     nvim --version || { return 1; }
 }
