@@ -12,6 +12,70 @@ Colorscheme_names = {
 --- Whether to apply the overrides
 Colorscheme_override = true
 
+function wsl_dark_theme_check()
+    local property_path = "\"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\""
+    local cmd = "powershell.exe"
+    local args = "Get-ItemProperty -Path " .. property_path .. "-Name AppsUseLightTheme"
+    local complete = vim.system({cmd, args}, {text = true}):wait();
+    if (complete.code ~= 0) then
+        print(complete.stderr)
+    end
+    if string.find(complete.stdout, 'AppsUseLightTheme : 0') then
+        return true
+    elseif string.find(complete.stdout, 'AppsUseLightTheme : 1') then
+        return false
+    else
+        print("Invalid WSL output: " .. complete.stdout)
+    end
+end
+
+
+Theme_monitor_timer = nil
+function Stop_theme_monitor()
+    -- call Theme_monitor_timer:stop() to cancel the monitor
+    if Theme_monitor_timer ~= nil then
+        Theme_monitor_timer:stop()
+        print('Theme monitor stopped')
+    end
+end
+function Start_theme_monitor(request_theme)
+    -- Run every second a callback that checks system theme
+    -- and updates colorscheme
+    local interval = 1000
+    Theme_monitor_timer = vim.loop.new_timer()
+    local theme = vim.o.background
+    local callback = function()
+        -- manually changed background, stop timer
+        if vim.o.background ~= theme then
+            Stop_theme_monitor()
+        end
+
+        local system_theme = request_theme() and 'dark' or 'light'
+        -- system theme changed
+        if theme ~= system_theme then
+            vim.o.background = system_theme
+            Colors_override_fn(Colorscheme_names[Colorscheme_id][1])
+            theme = system_theme
+        end
+    end
+    Theme_monitor_timer:start(interval, interval, vim.schedule_wrap(callback))
+end
+
+function set_host_specific_config()
+    local hostname = vim.loop.os_gethostname()
+    local host_functions = {
+        ["Your-Home-Hostname"] = function() end,
+        ["LAPTOP-112LK02F"] = function()
+            Start_theme_monitor(wsl_dark_theme_check)
+        end
+    }
+    if host_functions[hostname] then
+        host_functions[hostname]()
+    end
+end
+
+set_host_specific_config()
+
 function Colors_override_fn(name)
     if not Colorscheme_override then
         return
@@ -242,7 +306,8 @@ return {
         -- vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
         opts = {
             options = {
-                theme = 'auto',
+                --theme = 'auto',
+                --theme = 'gruvbox',
                 component_separators = { left = '', right = '' },
                 section_separators = { left = '', right = '' },
                 disabled_filetypes = {
@@ -251,9 +316,9 @@ return {
                 },
                 globalstatus = false,
                 refresh = {
-                    statusline = 1000,
-                    tabline = 1000,
-                    winbar = 1000,
+                    statusline = 300,
+                    tabline = 300,
+                    winbar = 300,
                 }
             },
             sections = {
@@ -267,12 +332,19 @@ return {
             inactive_sections = {
                 lualine_a = {},
                 lualine_b = {},
-                lualine_c = { 'filename' },
+                lualine_c = { {'filename', path = 1 } },
                 lualine_x = { 'location' },
                 lualine_y = {},
                 lualine_z = {}
             },
-        }
+        },
+    config = function(_, opts)
+      vim.opt.fillchars = {
+        stl = "─",
+        stlnc = "─",
+      }
+      require('lualine').setup(opts)
+    end
   },
 
   -- Treesitter
@@ -284,8 +356,18 @@ return {
       --setup treesitter
       treesitter = require 'nvim-treesitter.configs'
       treesitter.setup({
-        ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte" },
+        ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte",
+          "typescript", "css" },
         sync_install = false,
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<c-g>",
+            node_incremental = "<c-x>l",
+            node_decremental = "<c-x>h",
+            scope_incremental = "<c-x>r",
+          },
+        },
         highlight = { enable = true },
         indent = { enable = true },
         auto_install = true,
