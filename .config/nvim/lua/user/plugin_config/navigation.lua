@@ -64,7 +64,7 @@ return {
           ["h"] = "close_node",
           ["H"] = "navigate_up",
           ["<C-x>"] = "open_split",
-          ["T"] = "open_tab",
+          ["T"] = "open_tabnew",
           ["s"] = "open_vsplit",
           ["I"] = "toggle_hidden",
           ["z"] = "noop",
@@ -174,6 +174,16 @@ return {
     "cbochs/portal.nvim",
     -- Optional dependencies
     cmd = { "Portal" },
+    keys = {
+      {"<leader>o", "<cmd>Portal jumplist backward<cr>", desc = "Backward portal"},
+      {"<leader>i", "<cmd>Portal jumplist forward<cr>", desc = "Forward portal"},
+    },
+    opts = {
+      labels = { "u", "h", "e", "t", "o", "n"}, 
+      window_options = {
+        height = 4,
+      },
+    },
     dependencies = {
       "cbochs/grapple.nvim",
       --"ThePrimeagen/harpoon"
