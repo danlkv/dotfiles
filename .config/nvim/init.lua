@@ -17,7 +17,8 @@ vim.o.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = ""
 vim.opt.foldnestmax = 4
-vim.o.foldlevelstart = 1
+--vim.o.foldlevelstart = 1
+vim.o.foldlevel = 4
 vim.o.foldenable = true
 -- vim.cmd 'set formatoptions+=a'
 
@@ -59,7 +60,31 @@ vim.api.nvim_create_autocmd('BufRead', {
     end,
 })
 
+
+
 require 'user'
 require 'neovide'
 require 'my_modules.transparent'
 require 'my_modules.colors'
+
+-- FIXME: this does not work, when I open files the indentexpr is not to treesitter.
+-- Also ftplugin doesn't work.
+-- https://vi.stackexchange.com/questions/8824/in-what-order-does-vim-read-ftplugin-files-syntax-files-and-the-vimrc-when-f
+-- Filetype specific
+-- cpp
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'cpp,cc,hpp,cu,h',
+  callback = function()
+    -- set indentexpr=
+    vim.opt.indentexpr = ''
+  end,
+})
+
+-- FIXME: this does not work, when I open files the formatoptions contain o
+vim.opt.formatoptions:remove('o')
+
+-- Temporary fix to the above, to be called manually
+function OwriteSettings()
+    vim.opt.indentexpr = ''
+    vim.opt.formatoptions:remove('o')
+end
