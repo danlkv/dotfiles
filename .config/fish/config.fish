@@ -4,7 +4,7 @@ end
 
 abbr -a glo "git log --graph --decorate --topo-order --date=format-local:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(cyan)%h%Creset %C(black bold)%ad %C(dim yellow)(%an) %Creset%C(auto)%d %s'"
 abbr -a gl "git log --decorate --color --graph --all  --pretty=format:'%C(yellow)%h %Cred%ad %Creset%s%x09%Cblue%an%Cgreen%d ' --date=relative"
-git config --global alias.lg "log --graph --decorate -30 --topo-order --date=format-local:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(cyan)%h%Creset %C(black bold)%ad %C(dim yellow)(%an) %Creset%C(auto)%d %s'"
+#git config --global alias.lg "log --graph --decorate -30 --topo-order --date=format-local:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(cyan)%h%Creset %C(black bold)%ad %C(dim yellow)(%an) %Creset%C(auto)%d %s'"
 
 # -- Vim keybindings
 fish_vi_key_bindings
