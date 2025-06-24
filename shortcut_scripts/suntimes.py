@@ -3,6 +3,13 @@
 import math
 import argparse
 from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+# Fallback for Python < 3.11 (no datetime.UTC)
+try:
+    UTC = datetime.UTC  # Python 3.11+
+except AttributeError:
+    UTC = timezone.utc
 
 city_coords = {
     # US cities
@@ -38,7 +45,7 @@ city_coords = {
 
 def calculate_sun_times(lat, lon, date=None):
     if date is None:
-        date = datetime.utcnow().date()
+        date = datetime.now(UTC).date()
 
     zenith = 90.833
     day = date.timetuple().tm_yday
@@ -62,12 +69,12 @@ def calculate_sun_times(lat, lon, date=None):
         H = ((360 - math.degrees(math.acos(cosH))) if is_sunrise else math.degrees(math.acos(cosH))) / 15
         T = H + RA - (0.06571 * t) - 6.622
         UT = (T - lng_hour) % 24
-        return datetime.combine(date, datetime.min.time()) + timedelta(hours=UT)
+        return datetime.combine(date, datetime.min.time(), UTC) + timedelta(hours=UT)
 
     return calc_time(True), calc_time(False)
 
 def get_current_status(lat, lon, now=None):
-    now = now or datetime.utcnow()
+    now = now or datetime.now(UTC)
     sunrise, sunset = calculate_sun_times(lat, lon)
     if sunrise and sunset:
         if sunrise < sunset:
