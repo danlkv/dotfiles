@@ -46,12 +46,30 @@ return {
     keys = {
       { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
       -- To trigger standard vim "go to next location", use <ctrl-shift-i>
-      { "<c-i>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
+      { "<c-l>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
       { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
       { "<leader>B", "<cmd>Neotree toggle show buffers right focus<cr>", desc = "Neotree buffers focus" },
     },
     opts = {
       auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
+      default_component_configs = {
+        git_status = {
+          symbols = {
+            -- Change type
+            added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
+            modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
+            deleted = "✖", -- this can only be used in the git_status source
+            --renamed = "󰁕", -- this can only be used in the git_status source
+            renamed = "", -- nf-oct-file-symlink-file
+            -- Status type
+            untracked = "◌",
+            ignored = "",
+            unstaged = "", 
+            staged = "",
+            conflict = "",
+          },
+        },
+      },
       window = {
         width = 45,
         side = "left",
@@ -80,6 +98,33 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("neo-tree").setup(opts)
+
+      -- Setup toggle/focus depending on neotree focus
+      local manager = require("neo-tree.sources.manager")
+      local function is_neotree_focused()
+        local bufnr = vim.api.nvim_get_current_buf()
+        for _, src in ipairs(require("neo-tree").config.sources) do
+          local st = manager.get_state(src)
+          if st and st.bufnr == bufnr then return true end
+        end
+        return false
+      end
+      local function focus_or_toggle()
+        if is_neotree_focused() then
+          vim.cmd("Neotree toggle reveal")
+        else
+          vim.cmd("Neotree focus reveal")
+        end
+      end
+
+      ---- keymap
+      vim.keymap.set("n", "<tab>", focus_or_toggle, {
+        desc = "Neo-tree: focus if hidden / toggle if focused",
+        silent = true,
+      })
+    end,
   },
 
   -- Telescope

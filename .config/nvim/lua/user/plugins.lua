@@ -14,13 +14,15 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Determine Obsidian workspace path based on hostname
 local hostname = vim.loop.os_gethostname()
-
 local host_to_path = {
   ["Your-Home-Hostname"] = "/path/to/home/notes",
-  ["Your-Work-Hostname"] = "/path/to/work/notes",
+  ["LAPTOP-112LK02F"] = "/mnt/h/My Drive/Notes",
 }
-
-local obsidian_path = host_to_path[hostname] or "/mnt/h/My Drive/Notes"  -- default path
+local obsidian_path = host_to_path[hostname] or ""  -- default path
+-- check if path is a valid directory
+if vim.fn.isdirectory(obsidian_path) == 0 then
+  obsidian_path = ""
+end
 
 require("lazy").setup({
   -- Colors and syntax
@@ -83,6 +85,7 @@ require("lazy").setup({
     "epwalsh/obsidian.nvim",
     version = "*",     -- recommended, use latest release instead of latest commit
     lazy = true,
+    enabled = obsidian_path ~= "",
     ft = "markdown",
     -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
     -- event = {
@@ -95,8 +98,6 @@ require("lazy").setup({
     dependencies = {
       -- Required.
       "nvim-lua/plenary.nvim",
-
-      -- see below for full list of optional dependencies 👇
     },
     opts = {
       workspaces = {
@@ -106,7 +107,6 @@ require("lazy").setup({
         },
       },
 
-      -- see below for full list of options 👇
     },
   },
 

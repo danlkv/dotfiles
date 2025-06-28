@@ -1,110 +1,178 @@
 -- Autocomplete menu
-
+--
 vim.opt.pumheight = 10
 vim.cmd "set cinoptions+=(0"
 
-
--- LSP
-local lsp_zero = require('lsp-zero')
-
-lsp_zero.on_attach(function(client, bufnr)
-    -- see :help lsp-zero-keybindings
-    -- to learn the available actions
-    lsp_zero.default_keymaps({ buffer = bufnr })
-    --lsp_zero.buffer_autoformat()
-
-    -- Svelte
-    -- https://github.com/sveltejs/language-tools/issues/2008
-    vim.api.nvim_create_autocmd("BufWritePost", {
-        pattern = { "*.js", "*.ts" },
-        callback = function(ctx)
-            if client.name == "svelte" then
-                client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-            end
-        end,
-    })
-end)
-
-
---Mason Setup
-require("mason").setup({
-    ui = {
-        icons = {
-            package_installed = "✓",
-        },
-    },
-})
-
---Mason-LSP Setup
-require("mason-lspconfig").setup({
-    handlers = {
-        lsp_zero.default_setup
-    },
-    ensure_installed = {
-        "lua_ls",
-        --"cssls",
-        --"jsonls",
-        --"pyright",
-        --"tsserver",
-        --"eslint",
-        --"html",
-        --"svelte",
-        "rust_analyzer",
-    },
-})
-
-require 'lsp_signature'.setup {
-    hint_prefix = ' '
-}
-require('user.plugin_config.languages')
-
--- Folding
-
---vim.o.foldcolumn = '1' -- '0' is not bad
---vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
---vim.o.foldlevelstart = 99
---vim.o.foldenable = true
--- Auto-open float using built-in Lua API
 vim.api.nvim_create_autocmd("CursorHold", {
     callback = function()
         vim.diagnostic.open_float(nil, { focus = false })
     end
 })
--- set cursorhold time
 vim.o.updatetime = 500
 
+-- Modules configuration
+return {
+  {
+    'williamboman/mason.nvim',
+    config = function()
+      require("mason").setup({
+        ui = { icons = { package_installed = "✓", }, },
+      })
+    end
+  },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    config = function()
+      -- Quarantine on 07-04-2025 : Do I need this?
+      -- local lsp_zero = require('lsp-zero')
+      require("mason-lspconfig").setup({
+        --handlers = { lsp_zero.default_setup },
+        ensure_installed = {
+          "lua_ls",
+          --"cssls",
+          --"jsonls",
+          --"pyright",
+          --"tsserver",
+          --"eslint",
+          --"html",
+          --"svelte",
+          "pyrefly",
+          "rust_analyzer",
+        },
+      })
+    end
+  },
+  {
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v3.x',
+    config = function()
+      -- This has to be run before `require lspconfig`
+      -- Thus, there is a dependency on lspconfig of this module
+      local lsp_zero = require('lsp-zero')
+      vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+      vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
+      vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+      vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+      vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
+      vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
+      vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
+      lsp_zero.on_attach(function(client, bufnr)
+        lsp_zero.default_keymaps({ buffer = bufnr })
+        -- Svelte workaround
+        vim.api.nvim_create_autocmd("BufWritePost", {
+          pattern = { "*.js", "*.ts" },
+          callback = function(ctx)
+            if client.name == "svelte" then
+              client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+            end
+          end,
+        })
+      end)
+    end
+  },
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = { 'VonHeikemen/lsp-zero.nvim', },
+    config = function()
+      -- Quarantine on 07-04-2025 : Do I need this?
+      --local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      --capabilities.textDocument.foldingRange = {
+       -- dynamicRegistration = false,
+        --lineFoldingOnly = true
+      --}
+      --local language_servers = require("lspconfig").util.available_servers()
+      --for _, ls in ipairs(language_servers) do
+       -- require('lspconfig')[ls].setup({
+       --   capabilities = capabilities
+       -- })
+      --end
+      --require('lspconfig').pyrefly.setup({})
 
--- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
---vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
---vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
---vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+      require('lspconfig').rust_analyzer.setup({
+        cargo = {
+          allFeatures = true,
+        },
+      })
+      require('lspconfig').clangd.setup({
+        name = "clangd",
+        cmd = { "clangd",
+          "--query-driver=/usr/bin/g++-13" },
+        initialization_options = {
+          fallback_flags = { "-std=c++20" },
+        }
+      })
+    end
+  },
 
+  -- LLM editing
+  --
+  {
+    'github/copilot.vim',
+    enabled = false
+  },
+  {
+    'Exafunction/windsurf.vim',
+    event = 'BufEnter'
+  },
+  {
+    "joshuavial/aider.nvim",
+    opts = {
+      auto_manage_context = true, -- automatically manage buffer context
+      default_bindings = true,    -- use default <leader>A keybindings
+      debug = false,              -- enable debug logging
+    },
+  },
 
--- Option 2: nvim lsp as LSP client
--- Tell the server the capability of foldingRange,
--- Neovim hasn't added foldingRange to default capabilities, users must add it manually
---local capabilities = vim.lsp.protocol.make_client_capabilities()
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
+  -- Nvim CMP
+  --
+  {
+    'hrsh7th/nvim-cmp',
+    event = { "InsertEnter" },
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    opts = function(_, opts)
+      local cmp = require 'cmp'
+      return {
+        sources = {
+          { name = "lazydev", group_index = 0 },
+          { name = "nvim_lsp" },
+          { name = "buffer" },
+          { name = "path" },
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+          ["<CR>"] = cmp.mapping({
+            i = function(fallback)
+              if cmp.visible() and cmp.get_active_entry() then
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+              else
+                fallback()
+              end
+            end,
+            s = cmp.mapping.confirm({ select = true }),
+            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+          }),
+        })
+      }
+    end
+  },
+
+  -- Function signature editing
+  --
+  {
+    "ray-x/lsp_signature.nvim",
+    opts = {},
+    config = function(_, opts)
+      require 'lsp_signature'.setup(opts)
+    end
+  },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {}
+  },
 }
-local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
-for _, ls in ipairs(language_servers) do
-    require('lspconfig')[ls].setup({
-        capabilities = capabilities
-        -- you can add other fields for setting up lsp server in this table
-    })
-end
-
-require('lspconfig').clangd.setup({
-    name = "clangd",
-    cmd = { "clangd",
-        --"--log=verbose",
-        "--query-driver=/usr/bin/g++" },
-    initialization_options = {
-        fallback_flags = { '-std=c++20' },
-    }
-})
---require('ufo').setup()

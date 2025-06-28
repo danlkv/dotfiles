@@ -6,6 +6,10 @@ return {
     }}
   },
   {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+  },
+  {
     "NeogitOrg/neogit",
     --event = "VeryLazy",
     keys = { "gs" },
@@ -53,13 +57,84 @@ return {
       -- refer to the configuration section below
     },
   },
+  -------------------------------------------------------------------------------
+  -- Populates project-wide lsp diagnostics, regardless of what files are opened.
+
+  {
+    "artemave/workspace-diagnostics.nvim",
+    event        = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "folke/trouble.nvim",
+    },
+    config = function()
+      require("workspace-diagnostics").setup({
+        workspace_files = function()                -- Customize this function to return project files.
+          return vim.fn.systemlist("git ls-files")  -- Example to get files from Git.
+        end,
+        -- Add any other configuration options as needed.
+      })
+
+      vim.api.nvim_set_keymap('n', '<space>x', '', {
+        noremap = true,
+        callback = function()
+          for _, client in ipairs(vim.lsp.get_clients()) do
+            require("workspace-diagnostics").populate_workspace_diagnostics(client, 0)
+          end
+        end,
+        desc = "Populate workspace diagnostics"
+      })
+    end,
+  },
 
   -- extract method, rename var
   -- { import = "user.plugin_config.plugins.refactoring-nvim" },
 
   -- Sessions
   {
+    'rmagatti/auto-session',
+    lazy = false,
+    keys = {
+      -- Will use Telescope if installed or a vim.ui.select picker otherwise
+      { '<leader>sr', '<cmd>SessionSearch<CR>', desc = 'Session search' },
+      { '<leader>ss', '<cmd>SessionSave<CR>', desc = 'Save session' },
+      { '<leader>sa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
+    },
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      cwd_change_handling = true,
+
+      -- ⚠️ This will only work if Telescope.nvim is installed
+      -- The following are already the default values, no need to provide them if these are already the settings you want.
+      session_lens = {
+        -- If load_on_setup is false, make sure you use `:SessionSearch` to open the picker as it will initialize everything first
+        load_on_setup = true,
+        previewer = false,
+        mappings = {
+          -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
+          delete_session = { "i", "<C-D>" },
+          alternate_session = { "i", "<C-S>" },
+          copy_session = { "i", "<C-Y>" },
+        },
+        -- Can also set some Telescope picker options
+        -- For all options, see: https://github.com/nvim-telescope/telescope.nvim/blob/master/doc/telescope.txt#L112
+        theme_conf = {
+          border = true,
+          -- layout_config = {
+          --   width = 0.8, -- Can set width and height as percent of window
+          --   height = 0.5,
+          -- },
+        },
+      },
+    }
+  }
+  ,
+  {
     "Shatur/neovim-session-manager",
+    enabled = false,
     config = function()
       session_manager = require("session_manager")
       local config = require('session_manager.config')
