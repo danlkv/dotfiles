@@ -1,0 +1,12 @@
+[Unit]
+Description=Sync Windows system theme to config files
+
+[Service]
+Type=oneshot
+ExecStart={{SCRIPT_PATH}}
+Environment=PATH=/usr/bin:/bin:/mnt/c/Windows/System32/WindowsPowerShell/v1.0
+
+
+[Install]
+WantedBy=default.target
+
