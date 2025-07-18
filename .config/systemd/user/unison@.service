@@ -1,0 +1,27 @@
+# ~/.config/systemd/user/unison@.service
+# Starts unison with the .prf-config of your choice
+# Create a unison .prf-config such as
+# https://gist.github.com/thunfischbrot/3efbd4a87785615a61e4f5fd875f2699
+# Set the HOME Environment variable below to the user's home dir
+# Reload systemd services
+# systemctl daemon-reload
+# Start service with name of your .prf
+# systemctl start unison@20Documents
+# systemctl status
+# If it is working, add to startup
+# systemctl enable unison@20Documents
+
+[Unit]
+Description=Unison File Synchronization
+After=network.target
+
+[Service]
+Type=simple
+Environment="PATH=/usr/local/bin:/usr/bin"
+Environment="HOME=%h"
+ExecStart=unison %i
+Restart=always
+RestartSec=7
+
+[Install]
+WantedBy=default.target
