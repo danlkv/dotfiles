@@ -14,6 +14,14 @@ if [[ "$THEME" != "light" && "$THEME" != "dark" ]]; then
     exit 1
 fi
 
+# Prevent editing the file if it's already in theme
+uncomment=$(grep -E "^[[:space:]]*\/\/.*auto-switch-theme=$THEME" "$CONFIG_FILE")
+# Usually if we don't need to uncomment, we do need to comment out either.
+# Thus, it's safe to exit if uncomment is empty
+if [[ -z "$uncomment" ]]; then
+    exit 0
+fi
+
 # Uncomment matching lines
 sed -i -E "/auto-switch-theme=$THEME/ s/^([[:space:]]*)\/\/[[:space:]]*/\1/" "$CONFIG_FILE"
 
