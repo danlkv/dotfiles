@@ -4,10 +4,35 @@ vim.opt.pumheight = 10
 vim.cmd "set cinoptions+=(0"
 
 vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function()
-        vim.diagnostic.open_float(nil, { focus = false })
+  callback = function(args)
+    local float_bufnr, winid = vim.diagnostic.open_float(nil, { focus = false })
+    -- Bail if nothing was opened (no diagnostics) or bad type
+    if type(winid) ~= "number" or not vim.api.nvim_win_is_valid(winid) then
+      return
     end
+    -- Close the float when leaving the buffer/window
+    vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave", "BufHidden" }, {
+      once = true,
+      buffer = args.buf,
+      callback = function()
+        if vim.api.nvim_win_is_valid(winid) then
+          vim.api.nvim_win_close(winid, false)
+        end
+      end,
+      desc = "Close diagnostic float opened on CursorHold",
+    })
+  end
 })
+
+vim.diagnostic.config({ virtual_text = true })
+
+vim.keymap.set("n", "<leader>dt", function()
+  -- Check the current status of diagnostics for hints
+  if vim.diagnostic.is_enabled() then
+    -- If hints are enabled, disable them
+    vim.diagnostic.config({ virtual_text = true })
+  end
+end, { desc = "Toggle Hint Diagnostics" })
 vim.o.updatetime = 500
 
 -- Modules configuration
