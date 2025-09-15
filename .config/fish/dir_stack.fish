@@ -43,6 +43,7 @@ function dir_back --description "Go back in directory history"
         #echo ""
         #echo "← $dir_stack[$dir_stack_index]"
     else
+        echo ""
         echo "Already at beginning of history"
     end
     commandline -f repaint
@@ -54,8 +55,10 @@ function dir_forward --description "Go forward in directory history"
         set dir_stack_index (math $dir_stack_index + 1)
         builtin cd $dir_stack[$dir_stack_index]
         #echo ""
-        #echo "→ $dir_stack[$dir_stack_index]"
+        echo "$dir_stack_index → $dir_stack[$dir_stack_index]"
+        echo "$(math $dir_stack_index +1) → $dir_stack[$(math $dir_stack_index + 1)]"
     else
+        echo ""
         echo "Already at end of history"
     end
     commandline -f repaint
