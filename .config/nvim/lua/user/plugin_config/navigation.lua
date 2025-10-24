@@ -28,6 +28,70 @@ vim.keymap.set('n', 'tk', 'gT')
 --})
 
 return {
+
+  -- < Context > --
+  { 
+    "nvim-treesitter/nvim-treesitter-context",
+    opts = {
+      enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+      multiwindow = false, -- Enable multiwindow support.
+      max_lines = 3, -- How many lines the window should span. Values <= 0 mean no limit.
+      min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+      line_numbers = true,
+      multiline_threshold = 20, -- Maximum number of lines to show for a single context
+      trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+      mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
+      -- Separator between context and content. Should be a single character string, like '-'.
+      -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+      separator = nil,
+      zindex = 20, -- The Z-index of the context window
+      on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+    },
+    keys = {
+      { "<leader>u", function() require("treesitter-context").go_to_context(vim.v.count1) end, mode={"n", "v"}, desc = "Go to context" },
+    },
+    event = { "BufReadPost", "BufNewFile" },
+  },
+  -- </ Context > --
+
+  -- < Outline > --
+  {
+    "hedyhli/outline.nvim",
+    lazy = true,
+    cmd = { "Outline", "OutlineOpen" },
+    keys = { -- Example mapping to toggle outline
+      { "<leader>s", "<cmd>Outline<CR>", desc = "Toggle outline" },
+    },
+    opts = {
+      -- Your setup opts here
+    },
+  },
+  -- </ Outline > --
+
+  -- < Aerial > --
+  -- Similar to outline but more features
+  {
+    'stevearc/aerial.nvim',
+    opts = {
+      nav= { 
+        keymaps = {
+          ["q"] = "actions.close",
+          ["<esc>"] = "actions.close",
+        }
+      }
+    },
+    -- Optional dependencies
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    },
+    keys = {
+      { "<leader>at", "<cmd>AerialToggle<CR>", mode={"n", "v"}, desc = "Toggle Aerial" },
+      { "<leader>an", "<cmd>AerialNavToggle<CR>", mode={"n", "v"}, desc = "Toggle Aerial Nav" },
+    },
+  },
+  -- </ Aerial > --
+
   -- Tree explorer
   --
   {
@@ -46,7 +110,7 @@ return {
     keys = {
       { "<c-n>", "<cmd>Neotree toggle<cr>",        mode={"n", "v"}, desc = "Neotree toggle" },
       -- To trigger standard vim "go to next location", use <ctrl-shift-i>
-      { "<c-l>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
+      --{ "<c-l>", "<cmd>Neotree toggle reveal<cr>", desc = "Neotree current file" },
       { "<leader>b", "<cmd>Neotree toggle show buffers right<cr>", desc = "Neotree buffers" },
       { "<leader>B", "<cmd>Neotree toggle show buffers right focus<cr>", desc = "Neotree buffers focus" },
     },
@@ -127,7 +191,7 @@ return {
     end,
   },
 
-  -- Telescope
+  -- nelescope
   --
   {
     'nvim-telescope/telescope.nvim',
@@ -136,13 +200,13 @@ return {
     keys = {
       { '<c-P>',        '<cmd>Telescope cmdline<cr>', desc = 'Cmdline' },
       -- files
-      { '<c-k>',        '<cmd>Telescope file_browser<cr>', desc = 'Files' },
-      { '<c-t>',        '<cmd>Telescope find_files hidden=true no_ignore=true<cr>', desc = 'All files' },
+      { '<leader>te',   '<cmd>Telescope file_browser<cr>', desc = 'Files' },
+      { '<c-t>',        '<cmd>Telescope find_files hidden=true<cr>', desc = 'All files' },
       { '<leader>tg',   '<cmd>Telescope live_grep<cr>', desc = 'Files search' },
       { '<leader>tb',   '<cmd>Telescope buffers<cr>', desc = 'Buffers' },
       -- LSP
-      { '<c-j>',        '<cmd>Telescope lsp_document_symbols<cr>', desc = 'LSP Symbols' },
-      { '<leader>tr',   '<cmd>Telescope lsp_references', desc='LSP references'},
+      { '<leader>ts>',        '<cmd>Telescope lsp_document_symbols<cr>', desc = 'LSP Symbols' },
+      { '<leader>tr',   '<cmd>Telescope lsp_references<cr>', desc='LSP references'},
     },
     dependencies = {
       'nvim-lua/plenary.nvim',
