@@ -59,7 +59,7 @@ function install_from_source() {
     fi
     pushd $SOURCE_DIR/neovim
     make CMAKE_BUILD_TYPE=Release || { echo "!Failed to build"; exit 1; }
-    make CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1; }
+    make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$INSTALL_PREFIX install || { echo "!Failed to install"; exit 1; }
 }
 
 function install_from_distribution() {
