@@ -1,3 +1,6 @@
 [submodule ".config/qutebrowser/qutebrowser-theme"]
 	path = .config/qutebrowser/qutebrowser-theme
 	url = https://github.com/danlkv/qutebrowser-theme
+[submodule "zmk-config-corne"]
+	path = zmk-config-corne
+	url = https://github.com/danlkv/zmk-config-corne
