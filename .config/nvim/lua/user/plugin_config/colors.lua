@@ -369,7 +369,13 @@ return {
           },
         },
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = {
+          enable = true,
+          -- Markdown: treesitter's indent module returns 0 for prose lines,
+          -- which clobbers vim's `n` formatoption + autoindent and breaks
+          -- `gq` wrapping for list continuations past line 2.
+          disable = { 'markdown', 'markdown_inline' },
+        },
         auto_install = true,
       })
     end,
