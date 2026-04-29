@@ -25,3 +25,23 @@ fi
 ln -s $config_src $config_file
 echo "Config installed."
 
+# Link individual conf.d snippets (don't symlink the directory — plugins write into it)
+confd_src_dir=$PWD/../.config/fish/conf.d
+confd_dst_dir=$fish_confdir/conf.d
+mkdir -p $confd_dst_dir
+for src in $confd_src_dir/*.fish; do
+    [ -e "$src" ] || continue
+    dst=$confd_dst_dir/$(basename "$src")
+    if [ -e "$dst" ] || [ -L "$dst" ]; then
+        read -p "$dst already exists. Replace with symlink? [y/N]: " answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            rm "$dst"
+        else
+            echo "Skipping $dst."
+            continue
+        fi
+    fi
+    ln -s "$src" "$dst"
+    echo "Linked $dst -> $src"
+done
+
