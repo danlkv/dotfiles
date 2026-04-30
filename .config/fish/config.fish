@@ -24,6 +24,7 @@ abbr --add dc dir_stack_clear
 # </ dir stack >
 
 
+alias lg=lazygit
 alias vim=nvim
 alias tmux="tmux -2"
 alias clip="xclip -selection 'clipboard'"
