@@ -69,3 +69,4 @@ if status is-interactive
 end
 
 #source $HOME/.config/danlkv_platforms/$(hostname)
+fish_add_path ~/.local/bin
