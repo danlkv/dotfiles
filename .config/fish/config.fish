@@ -9,21 +9,21 @@ abbr -a gl "git log --decorate --color --graph --all  --pretty=format:'%C(yellow
 # -- Vim keybindings
 fish_vi_key_bindings
 
-source ~/.config/fish/dir_stack.fish
 # < dir stack >
 # Key bindings
 bind -M insert \cb dir_back     
 bind -M insert \cn dir_forward 
 
 # Optional: Add abbreviations for easier access
-abbr --add db dir_back
-abbr --add df dir_forward
-abbr --add ds dir_stack_show
-abbr --add dc dir_stack_clear
+abbr --add dib dir_back
+abbr --add dif dir_forward     # note: df is a command
+abbr --add dis dir_stack_show
+abbr --add dic dir_stack_clear
 
 # </ dir stack >
 
 
+alias lg=lazygit
 alias vim=nvim
 alias tmux="tmux -2"
 alias clip="xclip -selection 'clipboard'"

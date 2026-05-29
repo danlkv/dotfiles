@@ -45,6 +45,7 @@ function dir_back --description "Go back in directory history"
     else
         echo ""
         echo "Already at beginning of history"
+        dir_stack_show
     end
     commandline -f repaint
 end
@@ -60,6 +61,7 @@ function dir_forward --description "Go forward in directory history"
     else
         echo ""
         echo "Already at end of history"
+        dir_stack_show
     end
     commandline -f repaint
 end

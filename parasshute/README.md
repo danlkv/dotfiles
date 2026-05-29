@@ -47,6 +47,14 @@ Some directories are aliases for packages. For example,
 
 - `./drop.sh all` installs everything.
 
+## Output locations
+
+
+Configs for tools you can drop that live outside `$HOME/.config/`:
+
+- Claude — `$HOME/.claude/`
+
+
 ## Markers
 
 These may be helpful to check
