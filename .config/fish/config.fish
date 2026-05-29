@@ -69,5 +69,3 @@ if status is-interactive
 end
 
 #source $HOME/.config/danlkv_platforms/$(hostname)
-
-alias claude="/home/danlkv/.claude/local/claude"

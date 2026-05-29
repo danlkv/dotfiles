@@ -114,19 +114,19 @@ return {
       --end
       --require('lspconfig').pyrefly.setup({})
 
-      require('lspconfig').rust_analyzer.setup({
+      vim.lsp.config('rust_analyzer', {
         cargo = {
           allFeatures = true,
         },
       })
-      require('lspconfig').clangd.setup({
-        name = "clangd",
+      vim.lsp.config('clangd', {
         cmd = { "clangd",
           "--query-driver=/usr/bin/g++-13" },
-        initialization_options = {
+        init_options = {
           fallback_flags = { "-std=c++20" },
-        }
+        },
       })
+      vim.lsp.enable({ 'rust_analyzer', 'clangd' })
     end
   },
 
@@ -138,7 +138,10 @@ return {
   },
   {
     'Exafunction/windsurf.vim',
-    event = 'BufEnter'
+    event = 'BufEnter',
+    init = function()
+      vim.g.codeium_enabled = false
+    end,
   },
   {
     "joshuavial/aider.nvim",
