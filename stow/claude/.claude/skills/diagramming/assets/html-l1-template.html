@@ -1,0 +1,630 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --grid: #eeeeee;
+    --ink: #222222;
+    --node-bg: #ffffff;
+    --node-bg-card: #fafafa;
+    --panel-bg: rgba(255,255,255,0.95);
+    --panel-border: #cccccc;
+    --code-bg: #f0f0f0;
+    --muted: #555555;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --grid: rgba(255,255,255,0.07);
+      --ink: #e6e6e6;
+      --node-bg: #2a2a2a;
+      --node-bg-card: #232323;
+      --panel-bg: rgba(34,34,34,0.95);
+      --panel-border: #444;
+      --code-bg: #333;
+      --muted: #bbb;
+    }
+  }
+  body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  #canvas {
+    position: relative;
+    width: 100vw; height: 100vh;
+    background-color: var(--bg);
+    overflow: hidden;
+    cursor: grab;
+  }
+  #canvas.panning { cursor: grabbing; }
+  /* #world is the transformable surface — pan/zoom apply here.
+     Grid lives on #world so it moves and scales with content. */
+  #world {
+    position: absolute;
+    top: 0; left: 0;
+    width: 4000px; height: 3000px;
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  svg.edges {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .node {
+    position: absolute;
+    padding: 10px 14px;
+    background: var(--node-bg);
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    cursor: grab;
+    user-select: none;
+    font-size: 13px;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  /* Entities (rect) render larger than ephemeral/primitive nodes (card) — visual weight = scope. */
+  .node.rect {
+    padding: 18px 26px;
+    font-size: 16px;
+    font-weight: 600;
+    border-width: 2px;
+  }
+  .node.card { border-radius: 14px; background: var(--node-bg-card); }
+  .node:active { cursor: grabbing; }
+  /* old .legend kept for any inline use, but the main legend is now inside .panel */
+  .legend { display: none; }
+  .legend b { display: block; margin-bottom: 4px; }
+  .legend code { background: var(--code-bg); padding: 0 3px; }
+  .title {
+    position: fixed; top: 12px; left: 12px;
+    font-size: 13px; color: var(--muted);
+    background: var(--panel-bg);
+    padding: 8px 12px;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+  }
+  .panel {
+    position: fixed; top: 12px; right: 12px;
+    min-width: 200px;
+    background: var(--panel-bg);
+    color: var(--ink);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--panel-border);
+    font-weight: 600;
+  }
+  .panel-toggle {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--panel-border); border-radius: 3px;
+    cursor: pointer; font-size: 12px; line-height: 1;
+    padding: 2px 8px;
+  }
+  .panel.collapsed .panel-body { display: none; }
+  .panel.collapsed .panel-head { border-bottom: none; }
+  .panel.collapsed .panel-toggle::before { content: '▸'; }
+  .panel:not(.collapsed) .panel-toggle::before { content: '▾'; }
+  .panel-toggle { color: transparent; } /* hide the literal char, show ::before */
+  .panel-body { padding: 10px 12px; }
+  .panel-body .ctl {
+    display: flex; gap: 6px; align-items: center;
+    cursor: pointer; user-select: none;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: 8px;
+  }
+  .legend-section { margin-bottom: 8px; }
+  .legend-section:last-child { margin-bottom: 0; }
+  .legend-section b { display: block; margin-bottom: 4px; }
+  .validator {
+    position: fixed; top: 60px; left: 12px;
+    max-width: 360px;
+    background: var(--panel-bg);
+    color: var(--ink);
+    border: 1px solid var(--panel-border);
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
+  .validator.ok { border-color: #2a8a3e; }
+  .validator.bad { border-color: #c83a3a; }
+  .validator b { display: block; margin-bottom: 4px; }
+  .validator ul { margin: 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<div class="title" id="title"></div>
+<div class="validator" id="validator"></div>
+<div id="canvas">
+  <div id="world">
+    <svg class="edges" id="edges" style="color: var(--ink);"></svg>
+  </div>
+</div>
+<div class="panel" id="panel">
+  <div class="panel-head" id="panel-head">
+    <span>Controls &amp; Legend</span>
+    <button class="panel-toggle" id="panel-toggle" aria-label="Toggle panel">▾</button>
+  </div>
+  <div class="panel-body" id="panel-body">
+    <label class="ctl"><input type="checkbox" id="toggle-lifecycle" checked> Show lifecycle (Layer 2)</label>
+    <label class="ctl"><input type="checkbox" id="toggle-redundant"> Hide redundant edges</label>
+    <div class="legend-section">
+      <b>Multiplicity (line end)</b>
+      ─ plain = 1..1<br>
+      ─&lt; crow's foot = many<br>
+      ─◯ circle = optional
+    </div>
+    <div class="legend-section">
+      <b>Lifecycle (midline)</b>
+      ▶ filled triangle = contains (case 2)<br>
+      ▷ open arrow = outlives (case 1A)<br>
+      ⋯⋯ dashed line = non-coexistent (case 3)
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// DIAGRAM DATA — replace this block when instantiating from an example or
+// when generating a new diagram. Everything else in this file is rendering.
+//
+// Initial positions are CENTERS on the 40px grid; top-left x,y derived after
+// measure. shape: 'rect' for long-lived entities (renders big/bold); 'card'
+// for ephemeral/data states.
+//
+// mult:      '1..1' | '1..N' | 'N..1' | '0..1' | 'N..M'
+// lifecycle:  null  | 'contains' (case 2) | 'outlives' (case 1A) | 'historic' (case 3)
+// ============================================================================
+const DIAGRAM_TITLE = "Snapshot: describe the moment in time here";
+const nodes = [
+  { id: 'a', label: 'Entity A', shape: 'rect', cx: 240, cy: 240 },
+  { id: 'b', label: 'Entity B', shape: 'rect', cx: 720, cy: 240 },
+  { id: 'c', label: 'state c',  shape: 'card', cx: 480, cy: 440 },
+];
+const edges = [
+  { from: 'a', to: 'c', mult: '1..N', lifecycle: 'contains' },
+  { from: 'b', to: 'c', mult: '1..1', lifecycle: null },
+];
+// ============================================================================
+// END DIAGRAM DATA
+// ============================================================================
+
+document.title = DIAGRAM_TITLE;
+document.getElementById('title').textContent = DIAGRAM_TITLE;
+
+const SNAP = 40;
+// UI state — when false, lifecycle markers (midline + dashed stroke) are suppressed,
+// reducing the diagram to Layer 1 (multiplicity only).
+let showLifecycle = true;
+let hideRedundant = false;
+// Pan/zoom state. World coordinates are the model's canvas; screen coords go through transform.
+let zoom = 1, panX = 0, panY = 0;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const canvas = document.getElementById('canvas');
+const world = document.getElementById('world');
+const svg = document.getElementById('edges');
+
+function applyTransform() {
+  world.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+}
+const nodeById = id => nodes.find(n => n.id === id);
+const nodeEl   = id => document.getElementById('n-' + id);
+
+function renderNodes() {
+  for (const n of nodes) {
+    const el = document.createElement('div');
+    el.className = 'node ' + n.shape;
+    el.id = 'n-' + n.id;
+    el.textContent = n.label;
+    // Temporary placement so measurement is valid.
+    el.style.left = (n.cx ?? n.x) + 'px';
+    el.style.top  = (n.cy ?? n.y) + 'px';
+    attachDrag(el, n);
+    world.appendChild(el);
+  }
+  // Second pass: derive top-left from desired center using actual rendered size,
+  // and snap that center to the grid.
+  for (const n of nodes) {
+    const el = nodeEl(n.id);
+    const r = el.getBoundingClientRect();
+    const w = r.width / zoom, h = r.height / zoom;
+    const cx = Math.round((n.cx ?? n.x) / SNAP) * SNAP;
+    const cy = Math.round((n.cy ?? n.y) / SNAP) * SNAP;
+    n.x = cx - w / 2;
+    n.y = cy - h / 2;
+    el.style.left = n.x + 'px';
+    el.style.top  = n.y + 'px';
+  }
+}
+
+function attachDrag(el, n) {
+  el.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const sx = e.clientX, sy = e.clientY, bx = n.x, by = n.y;
+    const move = ev => {
+      // Mouse movement is in screen pixels; convert to world units by dividing by zoom.
+      const rawX = bx + (ev.clientX - sx) / zoom;
+      const rawY = by + (ev.clientY - sy) / zoom;
+      // r.width/height reflect rendered (zoomed) size; divide for unzoomed size.
+      const r = el.getBoundingClientRect();
+      const w = r.width / zoom, h = r.height / zoom;
+      // Snap the node's CENTER to the grid, not its top-left.
+      const snapCx = Math.round((rawX + w / 2) / SNAP) * SNAP;
+      const snapCy = Math.round((rawY + h / 2) / SNAP) * SNAP;
+      n.x = snapCx - w / 2;
+      n.y = snapCy - h / 2;
+      el.style.left = n.x + 'px';
+      el.style.top  = n.y + 'px';
+      renderEdges();
+    };
+    const up = () => {
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+    };
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  });
+}
+
+function center(n) {
+  const r = nodeEl(n.id).getBoundingClientRect();
+  const w = r.width / zoom, h = r.height / zoom;
+  return { x: n.x + w/2, y: n.y + h/2, w, h };
+}
+
+// Clip endpoint to node's bounding rectangle so the line touches the edge, not the center.
+function edgeTouch(c, other) {
+  const dx = other.x - c.x, dy = other.y - c.y;
+  if (dx === 0 && dy === 0) return { x: c.x, y: c.y };
+  const hw = c.w/2 + 2, hh = c.h/2 + 2;
+  const t = Math.min(hw/Math.abs(dx || 1e-9), hh/Math.abs(dy || 1e-9));
+  return { x: c.x + dx*t, y: c.y + dy*t };
+}
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+function endMarker(g, x, y, angle, kind) {
+  // crow's foot for many, open circle for optional, nothing for 1..1
+  if (kind === 'crow') {
+    const len = 12, spread = 7;
+    // Convergence at (-len, 0) back along line; three prongs fan out to the node side (x=0).
+    const path = svgEl('path', {
+      d: `M${-len},0 L0,${-spread} M${-len},0 L0,${spread} M${-len},0 L0,0`,
+      fill: 'none', stroke: 'currentColor', 'stroke-width': 1.5,
+      transform: `translate(${x},${y}) rotate(${angle})`
+    });
+    g.appendChild(path);
+  } else if (kind === 'circle') {
+    const cx = x - 8*Math.cos(angle*Math.PI/180);
+    const cy = y - 8*Math.sin(angle*Math.PI/180);
+    g.appendChild(svgEl('circle', { cx, cy, r: 5, fill: '#fff', stroke: 'currentColor', 'stroke-width': 1.4 }));
+  }
+}
+
+function midMarker(g, ax, ay, bx, by, lifecycle) {
+  if (!lifecycle) return;
+  const mx = (ax+bx)/2, my = (ay+by)/2;
+  const angle = Math.atan2(by-ay, bx-ax) * 180/Math.PI;
+  // Midpoint marker sized at ~66% of the crowfoot end-marker extent (crow len = 12).
+  const s = 4;
+  const tx = `translate(${mx},${my}) rotate(${angle})`;
+  let d, fill;
+  if (lifecycle === 'contains') { d = `M${-s},${-s*0.7} L${s},0 L${-s},${s*0.7} Z`; fill = 'currentColor'; }
+  else if (lifecycle === 'outlives' || lifecycle === 'historic') { d = `M${-s},${-s*0.7} L${s},0 L${-s},${s*0.7}`; fill = 'none'; }
+  else return;
+  g.appendChild(svgEl('path', {
+    d, fill, stroke: 'currentColor', 'stroke-width': 1.5,
+    transform: tx,
+  }));
+}
+
+function renderEdges() {
+  [...svg.querySelectorAll('g.edge')].forEach(g => g.remove());
+  // Compute redundancy sets each render so they live-update with edits.
+  const { removable, cycleSymmetry } = findRedundancySets(nodes, edges);
+  const removeSet = new Set(removable);
+  const cycleSet  = new Set(cycleSymmetry);
+  for (const e of edges) {
+    if (hideRedundant && removeSet.has(e)) continue;
+    const ca = center(nodeById(e.from)), cb = center(nodeById(e.to));
+    const a = edgeTouch(ca, cb), b = edgeTouch(cb, ca);
+    const g = svgEl('g', { class: 'edge' });
+    // For outlives/historic with lifecycle shown, break the line so the chevron sits in the gap.
+    const breakLine = showLifecycle && (e.lifecycle === 'outlives' || e.lifecycle === 'historic');
+    const dxFull = b.x - a.x, dyFull = b.y - a.y;
+    const L = Math.hypot(dxFull, dyFull) || 1;
+    const mx2 = (a.x + b.x) / 2, my2 = (a.y + b.y) / 2;
+    if (breakLine && L > 20) {
+      // Gap spans the chevron's x-extent (~2*s) along the line, with a small padding.
+      const halfGap = 5; // s(=4) + 1 padding
+      const ux = dxFull / L, uy = dyFull / L;
+      const seg1End  = { x: mx2 - ux * halfGap, y: my2 - uy * halfGap };
+      const seg2Start = { x: mx2 + ux * halfGap, y: my2 + uy * halfGap };
+      const seg1 = svgEl('line', { x1: a.x, y1: a.y, x2: seg1End.x, y2: seg1End.y,
+        stroke: 'currentColor', 'stroke-width': 1.5 });
+      const seg2 = svgEl('line', { x1: seg2Start.x, y1: seg2Start.y, x2: b.x, y2: b.y,
+        stroke: 'currentColor', 'stroke-width': 1.5 });
+      if (e.lifecycle === 'historic') {
+        seg1.setAttribute('stroke-dasharray', '5 4');
+        seg2.setAttribute('stroke-dasharray', '5 4');
+      }
+      g.appendChild(seg1);
+      g.appendChild(seg2);
+    } else {
+      const line = svgEl('line', {
+        x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+        stroke: 'currentColor', 'stroke-width': 1.5,
+      });
+      if (showLifecycle && e.lifecycle === 'historic') line.setAttribute('stroke-dasharray', '5 4');
+      g.appendChild(line);
+    }
+    // Visual cues: dim removable edges (when not hidden), mark cycle-symmetry edges.
+    if (removeSet.has(e)) g.setAttribute('opacity', '0.4');
+    else if (cycleSet.has(e)) g.setAttribute('opacity', '0.6');
+    if (cycleSet.has(e)) g.classList.add('cycle-edge');
+    const angleDeg = Math.atan2(b.y-a.y, b.x-a.x) * 180/Math.PI;
+    // multiplicity markers — crow on the "many" side; circle for optional.
+    if (e.mult === '1..N') endMarker(g, b.x, b.y, angleDeg, 'crow');
+    else if (e.mult === 'N..1') endMarker(g, a.x, a.y, angleDeg + 180, 'crow');
+    else if (e.mult === '0..1') endMarker(g, b.x, b.y, angleDeg, 'circle');
+    else if (e.mult === 'N..M') {
+      endMarker(g, b.x, b.y, angleDeg, 'crow');
+      endMarker(g, a.x, a.y, angleDeg + 180, 'crow');
+    }
+    if (showLifecycle) midMarker(g, a.x, a.y, b.x, b.y, e.lifecycle);
+    svg.appendChild(g);
+  }
+}
+
+// ---- Transitivity truncator -------------------------------------------------
+// For each Layer-1 edge, check whether a 2-hop path through some other node
+// reproduces the same forward/reverse multiplicity. Iteratively remove "safe"
+// candidates (whose implying path doesn't depend on other candidates). Anything
+// left over is a mutual-implication cluster — Invariant 1 / cycle territory, do
+// not pick a victim.
+
+function orientedArities(edge, fromNode) {
+  const [ft, tf] = arities(edge.mult);
+  if (edge.from === fromNode) return { fwd: ft, rev: tf };
+  if (edge.to   === fromNode) return { fwd: tf, rev: ft };
+  return null;
+}
+function composeArity(a, b) {
+  if (a === 'N' || b === 'N') return 'N';
+  if (a === '0..1' || b === '0..1') return '0..1';
+  return '1';
+}
+function findEdgeBetween(edgeList, n1, n2, exclude) {
+  return edgeList.find(e =>
+    e !== exclude &&
+    ((e.from === n1 && e.to === n2) || (e.from === n2 && e.to === n1)));
+}
+// Returns list of 2-hop paths (each a [edge1, edge2]) whose composed
+// multiplicity matches the direct edge's (forward + reverse arity).
+function implyingPaths(directEdge, edgeList, nodes) {
+  if (directEdge.lifecycle) return []; // only Layer-1 edges are truncation candidates
+  const want = orientedArities(directEdge, directEdge.from);
+  const paths = [];
+  for (const xn of nodes) {
+    if (xn.id === directEdge.from || xn.id === directEdge.to) continue;
+    const ax = findEdgeBetween(edgeList, directEdge.from, xn.id, directEdge);
+    const xc = findEdgeBetween(edgeList, xn.id, directEdge.to, directEdge);
+    if (!ax || !xc) continue;
+    const axA = orientedArities(ax, directEdge.from);
+    const xcA = orientedArities(xc, xn.id);
+    if (!axA || !xcA) continue;
+    const pathFwd = composeArity(axA.fwd, xcA.fwd);
+    const pathRev = composeArity(xcA.rev, axA.rev);
+    if (pathFwd === want.fwd && pathRev === want.rev) paths.push([ax, xc]);
+  }
+  return paths;
+}
+function findRedundancySets(nodes, edges) {
+  let current = edges.slice();
+  const removable = [];
+  while (true) {
+    const candidates = current.filter(e => implyingPaths(e, current, nodes).length > 0);
+    if (candidates.length === 0) return { removable, cycleSymmetry: [] };
+    const candSet = new Set(candidates);
+    let removedAny = false;
+    for (const c of candidates) {
+      const paths = implyingPaths(c, current, nodes);
+      // "Safe" means at least one implying path uses NO other candidate edges.
+      const safePath = paths.some(p => !p.some(pe => pe !== c && candSet.has(pe)));
+      if (safePath) {
+        removable.push(c);
+        current = current.filter(e => e !== c);
+        removedAny = true;
+        break;
+      }
+    }
+    if (!removedAny) return { removable, cycleSymmetry: candidates };
+  }
+}
+
+// ---- Invariant validation ---------------------------------------------------
+function arities(mult) {
+  switch (mult) {
+    case '1..1': return ['1', '1'];
+    case '1..N': return ['N', '1'];
+    case 'N..1': return ['1', 'N'];
+    case '0..1': return ['0..1', '1'];
+    case 'N..M': return ['N', 'N'];
+    default:     return ['?', '?'];
+  }
+}
+function validateInvariants(nodes, edges) {
+  const violations = [];
+  const parent = {};
+  for (const n of nodes) parent[n.id] = n.id;
+  const find = x => { while (parent[x] !== x) x = parent[x] = parent[parent[x]]; return x; };
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; };
+  for (const e of edges) if (e.mult === '1..1') union(e.from, e.to);
+  const superEdges = [];
+  for (const e of edges) {
+    const f = find(e.from), t = find(e.to);
+    if (f === t) continue;
+    superEdges.push({ sf: f, st: t, mult: e.mult, orig: e });
+  }
+  const groups = {};
+  for (const se of superEdges) {
+    const a = se.sf < se.st ? se.sf : se.st;
+    const b = se.sf < se.st ? se.st : se.sf;
+    const k = a + '||' + b;
+    if (!groups[k]) groups[k] = { a, b, edges: [] };
+    groups[k].edges.push(se);
+  }
+  for (const k in groups) {
+    const { a, b, edges: group } = groups[k];
+    if (group.length < 2) continue;
+    const fwdClaims = new Set(), revClaims = new Set();
+    for (const se of group) {
+      const [ft, tf] = arities(se.mult);
+      const [ab, ba] = se.sf === a ? [ft, tf] : [tf, ft];
+      fwdClaims.add(ab); revClaims.add(ba);
+    }
+    if (fwdClaims.size > 1 || revClaims.size > 1) {
+      const labels = group.map(se => `${se.orig.from} ${se.mult} ${se.orig.to}`);
+      violations.push({ pair: [a, b],
+        message: `Pair (${a}, ${b}) has contradictory multiplicity claims: ${labels.join(' ; ')}` });
+    }
+  }
+  return violations;
+}
+function renderValidator() {
+  const panel = document.getElementById('validator');
+  const violations = validateInvariants(nodes, edges);
+  const { removable, cycleSymmetry } = findRedundancySets(nodes, edges);
+  let html = '';
+  if (violations.length === 0) {
+    panel.className = 'validator ok';
+    html += '<b>Model valid ✓</b>No Invariant 2 violations.';
+  } else {
+    panel.className = 'validator bad';
+    const items = violations.map(v => `<li>${v.message}</li>`).join('');
+    html += `<b>Invariant 2 violations (${violations.length}):</b><ul>${items}</ul>`;
+  }
+  if (removable.length) {
+    const items = removable.map(e => `<li>${e.from} ${e.mult} ${e.to}</li>`).join('');
+    html += `<b style="margin-top:8px">Transitively implied (removable, ${removable.length}):</b><ul>${items}</ul>`;
+  }
+  if (cycleSymmetry.length) {
+    const items = cycleSymmetry.map(e => `<li>${e.from} ${e.mult} ${e.to}</li>`).join('');
+    html += `<b style="margin-top:8px">Cycle-symmetry (Invariant 1 candidate, ${cycleSymmetry.length}):</b><ul>${items}</ul>`;
+  }
+  panel.innerHTML = html;
+}
+// ----------------------------------------------------------------------------
+
+renderNodes();
+renderEdges();
+renderValidator();
+window.addEventListener('resize', renderEdges);
+
+document.getElementById('toggle-lifecycle').addEventListener('change', e => {
+  showLifecycle = e.target.checked;
+  renderEdges();
+});
+document.getElementById('toggle-redundant').addEventListener('change', e => {
+  hideRedundant = e.target.checked;
+  renderEdges();
+  renderValidator();
+});
+
+// Panel collapse: clicking the header (or the chevron) collapses/expands the body.
+document.getElementById('panel-head').addEventListener('click', () => {
+  document.getElementById('panel').classList.toggle('collapsed');
+});
+
+// ---- Pan ----
+// Drag on empty canvas area (not on a node) to pan the world.
+let panning = false, panSX, panSY, panOrigX, panOrigY;
+canvas.addEventListener('mousedown', e => {
+  if (e.target.closest('.node')) return; // node drag takes precedence
+  if (e.target.closest('.panel') || e.target.closest('.title') || e.target.closest('.validator')) return;
+  panning = true;
+  canvas.classList.add('panning');
+  panSX = e.clientX; panSY = e.clientY;
+  panOrigX = panX; panOrigY = panY;
+  e.preventDefault();
+});
+document.addEventListener('mousemove', e => {
+  if (!panning) return;
+  panX = panOrigX + (e.clientX - panSX);
+  panY = panOrigY + (e.clientY - panSY);
+  applyTransform();
+});
+document.addEventListener('mouseup', () => {
+  if (panning) {
+    panning = false;
+    canvas.classList.remove('panning');
+  }
+});
+
+// ---- Zoom ----
+// Mouse wheel zooms, anchored on cursor position.
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  // World point under cursor BEFORE zoom change.
+  const wx = (mx - panX) / zoom;
+  const wy = (my - panY) / zoom;
+  const factor = Math.exp(-e.deltaY * 0.0015);
+  const newZoom = Math.max(0.25, Math.min(3, zoom * factor));
+  zoom = newZoom;
+  // Keep the world point fixed under the cursor.
+  panX = mx - wx * zoom;
+  panY = my - wy * zoom;
+  applyTransform();
+  renderEdges(); // re-measure may not be needed but harmless; ensures markers re-render at new positions.
+}, { passive: false });
+
+applyTransform();
+
+// Re-snap any node whose size changes after first paint (font load, late reflow).
+// Keeps centers on the grid and edges anchored to true centers.
+const resizeObs = new ResizeObserver(entries => {
+  let changed = false;
+  for (const entry of entries) {
+    const id = entry.target.id.replace(/^n-/, '');
+    const n = nodeById(id);
+    if (!n) continue;
+    const r = entry.target.getBoundingClientRect();
+    const w = r.width / zoom, h = r.height / zoom;
+    const curCx = n.x + w / 2;
+    const curCy = n.y + h / 2;
+    const snapCx = Math.round(curCx / SNAP) * SNAP;
+    const snapCy = Math.round(curCy / SNAP) * SNAP;
+    const newX = snapCx - w / 2;
+    const newY = snapCy - h / 2;
+    if (newX !== n.x || newY !== n.y) {
+      n.x = newX; n.y = newY;
+      entry.target.style.left = newX + 'px';
+      entry.target.style.top  = newY + 'px';
+      changed = true;
+    }
+  }
+  if (changed) renderEdges();
+});
+for (const n of nodes) resizeObs.observe(nodeEl(n.id));
+</script>
+</body>
+</html>
