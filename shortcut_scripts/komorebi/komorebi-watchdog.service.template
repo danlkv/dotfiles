@@ -1,0 +1,10 @@
+[Unit]
+Description=Restart komorebi if not running
+
+[Service]
+Type=oneshot
+ExecStart={{SCRIPT_PATH}}
+Environment="PATH=/usr/bin:/bin:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files/komorebi/bin"
+
+[Install]
+WantedBy=default.target
