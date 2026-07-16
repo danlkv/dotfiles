@@ -1,5 +1,6 @@
-Before adding a new memory, ask the user if this should be a project-scope
-or user-scope memory. User-scope memory index follows.
+Before adding or editing a memory, read README.md (authoring process)
+and ask the user if it should be project-scope or user-scope.
+User-scope memory index follows.
 
 # Memory index
 
