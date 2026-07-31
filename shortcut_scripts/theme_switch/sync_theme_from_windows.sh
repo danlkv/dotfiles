@@ -1,5 +1,25 @@
 #!/bin/bash
-set -e
+# --
+# Run this in WSL environment to
+# 1. determine the Windows theme 
+# 2. auto-edit Linux theme files
+#
+# -- How to get Windows theme? --
+#   Option 1. Use powershell to query registry.
+#       Path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
+#       Key: AppsUseLightTheme
+#           powershell.exe -NoProfile -Command 'Get-ItemPropertyValue -Path $Path -Name $Key'
+#       Drawback: takes 250ms and powershell is heavy.
+#
+#   Option 2. Use reg.exe
+#       Drawback: doesn't work in systemd service
+#
+#   Option 3. Use custom executable built in windows. See themequery.c
+#       Drawback: needs to be compiled
+#
+
+
+set -o errexit
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -49,6 +69,7 @@ WIN_HOME=$(get_windows_home)
 # --- Add your config files here ---
 CONFIGS=(
   "$WIN_HOME/komorebi.bar.json"
+  "$WIN_HOME/komorebi.json"
   "$WIN_HOME/.config/tacky-borders/config.yaml"
 )
 

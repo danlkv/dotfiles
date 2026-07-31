@@ -70,6 +70,7 @@ return {
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x',
+    enabled = false,
     config = function()
       -- This has to be run before `require lspconfig`
       -- Thus, there is a dependency on lspconfig of this module
@@ -99,6 +100,11 @@ return {
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'VonHeikemen/lsp-zero.nvim', },
+    keys = {
+      { "gd", vim.lsp.buf.definition, mode = "n" , desc = "Go to definition" },
+      { "gD", vim.lsp.buf.declaration, mode = "n", desc = "Go to declaration" },
+      { "gr", vim.lsp.buf.references, mode = "n", desc = "Go to references" },
+    },
     config = function()
       -- Quarantine on 07-04-2025 : Do I need this?
       --local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -189,14 +195,18 @@ return {
     end
   },
 
-  -- Function signature editing
+  -- Function signature display while editing
   --
+  -- Without any plugins:
+  --  K - show doc on symbol
+  --  ctrl-s - show signature while typing
   {
     "ray-x/lsp_signature.nvim",
     opts = {},
     config = function(_, opts)
       require 'lsp_signature'.setup(opts)
-    end
+    end,
+    enabled = false
   },
   {
     "folke/lazydev.nvim",

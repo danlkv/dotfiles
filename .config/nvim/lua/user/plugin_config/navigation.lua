@@ -195,7 +195,7 @@ return {
   --
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.5',
+    tag = 'v0.2.2',
     event = "VeryLazy",
     keys = {
       { '<c-P>',        '<cmd>Telescope cmdline<cr>', desc = 'Cmdline' },

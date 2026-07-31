@@ -1,9 +1,12 @@
 -- Git
 return {
   {
-    {'akinsho/toggleterm.nvim', version = "*", opts = {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    opts = {
       open_mapping = [[<c-\>]],
-    }}
+      direction = "float",
+    }
   },
   {
     "lewis6991/gitsigns.nvim",
@@ -189,7 +192,7 @@ return {
     },
     config = function(_, opts)
       vim.g.python_host_skip_check = 1
-      vim.g.loaded_python3_provider = 1
+      -- vim.g.loaded_python3_provider = 1
       vim.g.python3_host_skip_check = 1
       neotest = require("neotest")
       neotest.setup({

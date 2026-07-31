@@ -1,7 +1,7 @@
 -- Colorscheme config
 --
 --- Change this id
-Colorscheme_id = 3
+Colorscheme_id = 2
 
 Colorscheme_names = {
     [1] = { 'flexoki', 'Paper-like white minimalistic' },
@@ -12,7 +12,7 @@ Colorscheme_names = {
 --- Whether to apply the overrides
 Colorscheme_override = true
 
-function wsl_dark_theme_check()
+function wsl_dark_theme_check_pwsh()
     local property_path = "\"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\""
     local cmd = "powershell.exe"
     local args = "Get-ItemProperty -Path " .. property_path .. "-Name AppsUseLightTheme"
@@ -29,6 +29,19 @@ function wsl_dark_theme_check()
     end
 end
 
+function wsl_dark_theme_check()
+    local property_path = "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
+    local cmd = "reg.exe"
+    local args = {"query", property_path, "/v", "AppsUseLightTheme"}
+    local complete = vim.system({cmd, unpack(args)}, {text = true}):wait();
+    if (complete.code ~= 0) then
+        print(complete.stderr)
+    end
+    local val = complete.stdout:match("AppsUseLightTheme%s+REG_DWORD%s+0x(%x+)")
+    if not val then return end
+    local is_light = tonumber(val, 16) == 1
+    return not is_light
+end
 
 Theme_monitor_timer = nil
 function Stop_theme_monitor()
@@ -41,7 +54,7 @@ end
 function Start_theme_monitor(request_theme)
     -- Run every second a callback that checks system theme
     -- and updates colorscheme
-    local interval = 1000
+    local interval = 3000
     Theme_monitor_timer = vim.loop.new_timer()
     local theme = vim.o.background
     local callback = function()
@@ -76,26 +89,52 @@ end
 
 set_host_specific_config()
 
+function set_vim_diagnostics()
+    vim.diagnostic.config({
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = '',
+                [vim.diagnostic.severity.WARN] = '',
+                [vim.diagnostic.severity.INFO] = '',
+                [vim.diagnostic.severity.HINT] = '★',
+            },
+        }
+    })
+end
+
+set_vim_diagnostics()
+
+
 function Colors_override_fn(name)
     if not Colorscheme_override then
         return
     end
-    local override_background = false
+    local override_background = true
     -- Light
     if vim.o.background == 'light' then
         if override_background then
-            vim.api.nvim_set_hl(0, 'Normal', { bg = "#fcf5f3", fg = "#1d2023" })
+            --vim.api.nvim_set_hl(0, 'Normal', { bg = "#fcf5f3", fg = "#1d2023" })
+            vim.api.nvim_set_hl(0, 'Normal', { bg = "#ffffff", fg = "#000000" })
             vim.cmd 'highlight! BorderBG guibg=None guifg=#706560'
-            vim.api.nvim_set_hl(0, 'Number', { bg = "#feeae5", fg = '#3d4543' })
-            vim.api.nvim_set_hl(0, 'Comment', { bg = "#fef2da", fg = "#444f24" })
+            --vim.api.nvim_set_hl(0, 'Number', { bg = "#feeae5", fg = '#3d4543' })
+            vim.api.nvim_set_hl(0, 'Comment', { bg = "#fff8ff", fg = "#596f08" })
+            vim.api.nvim_set_hl(0, 'Function', { fg = "#792205" })
+            vim.api.nvim_set_hl(0, '@function', { fg = "#792205" })
+            vim.api.nvim_set_hl(0, 'Type', { fg = "#144365" })
+            vim.api.nvim_set_hl(0, '@type', { fg = "#144365" })
+            vim.api.nvim_set_hl(0, '@variable.member', { fg = "#004576" })
 
-            vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#2f552f" })
-            vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#552f2f" })
-            vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#555125" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { bg = "#efffef" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { bg = "#ffe0e0" })
+            vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = "#ffefff" })
+
+            vim.api.nvim_set_hl(0, 'CursorLine', { bg = "#f8f8f3" })
+            vim.api.nvim_set_hl(0, 'CursorColumn', { bg = "#faf5f5" })
+            vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = "#271179" })
         end
 
         if name == 'flexoki' then
-            vim.api.nvim_set_hl(0, 'CursorLine', { bg = "#feebe6" })
+            vim.api.nvim_set_hl(0, 'CursorLine', { bg = "#fffbf6" })
             vim.api.nvim_set_hl(0, 'CursorColumn', { bg = "#feeeea" })
             vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = "#271179" })
             vim.api.nvim_set_hl(0, 'String', { bg = "#f5f5f8", fg = "#41697a" })
@@ -226,7 +265,6 @@ return {
                 -- providers: provider used to get references in the buffer, ordered by priority
                 providers = {
                     'lsp',
-                    'treesitter',
                     'regex',
                 },
                 -- delay: delay in milliseconds
@@ -351,33 +389,50 @@ return {
   --
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
-    config = function(_, opts)
-      --setup treesitter
-      treesitter = require 'nvim-treesitter.configs'
-      treesitter.setup({
-        ensure_installed = { "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html", "svelte",
-          "typescript", "css" },
-        sync_install = false,
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<c-g>",
-            node_incremental = "<c-x>l",
-            node_decremental = "<c-x>h",
-            scope_incremental = "<c-x>r",
-          },
-        },
-        highlight = { enable = true },
-        indent = {
-          enable = true,
-          -- Markdown: treesitter's indent module returns 0 for prose lines,
-          -- which clobbers vim's `n` formatoption + autoindent and breaks
-          -- `gq` wrapping for list continuations past line 2.
-          disable = { 'markdown', 'markdown_inline' },
-        },
-        auto_install = true,
+    config = function()
+      local treesitter = require('nvim-treesitter')
+      local parsers = {
+        "c", "python", "rust", "lua", "vim", "vimdoc", "javascript", "html",
+        "svelte", "typescript", "css",
+      }
+
+      treesitter.setup({})
+      treesitter.install(parsers)
+
+      local group = vim.api.nvim_create_augroup("user_treesitter", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "*",
+        callback = function(args)
+          if not pcall(vim.treesitter.start, args.buf) then
+            return
+          end
+
+          -- Tree-sitter indentation breaks `gq` list continuation wrapping in
+          -- Markdown, so retain its filetype indentation there.
+          local filetype = vim.bo[args.buf].filetype
+          if filetype ~= "markdown" and filetype ~= "markdown_inline" then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
       })
+
+      -- Incremental selection moved into Neovim core in 0.12.
+      vim.keymap.set("n", "<c-g>", function()
+        vim.treesitter.select("parent", vim.v.count1)
+      end, { desc = "Start Tree-sitter selection" })
+      vim.keymap.set("x", "<c-x>l", function()
+        vim.treesitter.select("parent", vim.v.count1)
+      end, { desc = "Select parent Tree-sitter node" })
+      vim.keymap.set("x", "<c-x>h", function()
+        vim.treesitter.select("child", vim.v.count1)
+      end, { desc = "Select child Tree-sitter node" })
+      vim.keymap.set("x", "<c-x>r", function()
+        vim.treesitter.select("parent", vim.v.count1)
+      end, { desc = "Select parent Tree-sitter node" })
     end,
 
   },
@@ -390,6 +445,10 @@ return {
       local rainbow_delimiters = require 'rainbow-delimiters'
 
       vim.g.rainbow_delimiters = {
+        condition = function(bufnr)
+          local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+          return ok and parser ~= nil
+        end,
         strategy = {
           [''] = rainbow_delimiters.strategy['global'],
           vim = rainbow_delimiters.strategy['local'],
