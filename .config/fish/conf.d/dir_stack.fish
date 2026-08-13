@@ -1,5 +1,7 @@
-# Directory stack navigation for fish shell
-# Save this as ~/.config/fish/functions/dir_stack.fish
+# Directory stack navigation for fish shell.
+# Bindings live here rather than in config.fish so the keys and the functions
+# they call cannot drift apart. Safe despite config.fish calling
+# fish_vi_key_bindings later: that erases preset bindings only, not user ones.
 
 # Global variables for directory stack
 set -g dir_stack (pwd)  # Initialize with current directory
@@ -83,4 +85,14 @@ function dir_stack_clear --description "Clear directory navigation history"
     set dir_stack (pwd)
     set dir_stack_index 1
     echo "Directory stack cleared"
+end
+
+if status is-interactive
+    bind -M insert \cb dir_back
+    bind -M insert \cn dir_forward
+
+    abbr --add dib dir_back
+    abbr --add dif dir_forward # note: df is a command
+    abbr --add dis dir_stack_show
+    abbr --add dic dir_stack_clear
 end
